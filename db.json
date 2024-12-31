@@ -5,8 +5,8 @@
       "username": "testuser",
       "email": "test@example.com",
       "password": "Test123!",
-      "twoFactorEnabled": false,
-      "twoFactorSecret": null,
+      "twoFactorEnabled": true,
+      "twoFactorSecret": "JBSWY3DPEHPK3PXP",
       "profile": {
         "name": "Updated User",
         "defaultLocation": "Berlin"
@@ -19,17 +19,60 @@
       "password": "NewPass123!"
     }
   ],
-  "sessions": [],
-  "favorites": [],
-  "history": {
-    "searches": [],
-    "logins": [
-      {
-        "userId": "eca5",
-        "timestamp": "2024-12-31T05:00:00Z",
+  "sessions": [
+    {
+      "id": "a956",
+      "email": "test@example.com",
+      "password": "Test123!"
+    },
+    {
+      "id": "0c47",
+      "email": "test@example.com",
+      "password": "Test123!"
+    }
+  ],
+  "favorites": [
+    {
+      "id": "a035",
+      "userId": "eca5",
+      "city": "Berlin",
+      "coordinates": {
+        "lat": 52.52,
+        "lon": 13.41
+      }
+    },
+    {
+      "id": "170b",
+      "userId": "eca5",
+      "city": "Berlin",
+      "coordinates": {
+        "lat": 52.52,
+        "lon": 13.41
+      }
+    }
+  ],
+  "history": [
+    {
+      "id": "hist1",
+      "type": "login",
+      "userId": "eca5",
+      "timestamp": "2024-12-31T05:00:00Z",
+      "details": {
         "success": true
       }
-    ],
-    "favorites": []
-  }
+    },
+    {
+      "id": "hist2",
+      "type": "search",
+      "userId": "eca5",
+      "timestamp": "2024-12-31T05:00:00Z",
+      "details": {
+        "query": "Berlin",
+        "coordinates": {
+          "lat": 52.52,
+          "lon": 13.41
+        }
+      }
+    }
+  ]
 }
