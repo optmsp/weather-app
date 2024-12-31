@@ -1,12 +1,30 @@
 import type { LoginCredentials, RegisterData, User, UserProfile } from '@/types/user'
-import jwt from 'jsonwebtoken'
-import bcrypt from 'bcryptjs'
+import { TwoFactorAuthService } from './2fa'
 
 const API_URL = 'http://localhost:3000' // json-server URL
 
+// Browser-safe password hashing using Web Crypto API
+async function hashPassword(password: string): Promise<string> {
+  const encoder = new TextEncoder()
+  const data = encoder.encode(password)
+  const hash = await crypto.subtle.digest('SHA-256', data)
+  return Array.from(new Uint8Array(hash))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('')
+}
+
+// Simple JWT implementation for development
+function generateToken(payload: object): string {
+  const header = { alg: 'HS256', typ: 'JWT' }
+  const encodedHeader = btoa(JSON.stringify(header))
+  const encodedPayload = btoa(JSON.stringify(payload))
+  const signature = btoa('development-signature') // In production, use proper signing
+  return `${encodedHeader}.${encodedPayload}.${signature}`
+}
+
 export class AuthService {
   static async register(data: RegisterData): Promise<User> {
-    const hashedPassword = await bcrypt.hash(data.password, 10)
+    const hashedPassword = await hashPassword(data.password)
 
     const response = await fetch(`${API_URL}/users`, {
       method: 'POST',
@@ -39,8 +57,8 @@ export class AuthService {
       throw new Error('Invalid credentials')
     }
 
-    const validPassword = await bcrypt.compare(credentials.password, user.password)
-    if (!validPassword) {
+    const hashedInput = await hashPassword(credentials.password)
+    if (hashedInput !== user.password) {
       throw new Error('Invalid credentials')
     }
 
@@ -48,10 +66,13 @@ export class AuthService {
       if (!credentials.totpCode) {
         throw new Error('2FA code required')
       }
-      // TODO: Verify TOTP code
+      const isValidCode = TwoFactorAuthService.verifyToken(user.twoFactorSecret!, credentials.totpCode)
+      if (!isValidCode) {
+        throw new Error('Invalid 2FA code')
+      }
     }
 
-    const token = jwt.sign({ userId: user.id }, 'your-secret-key', { expiresIn: '24h' })
+    const token = generateToken({ userId: user.id, exp: Date.now() + 24 * 60 * 60 * 1000 })
     delete user.password
 
     return { user, token }
