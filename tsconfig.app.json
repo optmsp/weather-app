@@ -9,9 +9,11 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["node"],
+    "types": ["node", "vite/client"],
     "moduleResolution": "bundler",
     "allowJs": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "skipLibCheck": true
   }
 }
