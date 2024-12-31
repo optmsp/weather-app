@@ -41,10 +41,10 @@ const handleLogout = () => {
           </template>
           <template v-else>
             <li>
-              <router-link to="/login" class="btn btn-ghost" @click="console.log('Login clicked')">Login</router-link>
+              <button class="btn btn-ghost" @click="router.push('/login')">Login</button>
             </li>
             <li>
-              <router-link to="/register" class="btn btn-ghost" @click="console.log('Register clicked')">Register</router-link>
+              <button class="btn btn-ghost" @click="router.push('/register')">Register</button>
             </li>
           </template>
         </ul>
