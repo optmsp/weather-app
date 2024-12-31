@@ -28,4 +28,10 @@ export interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   token: string | null;
+  twoFactorEnabled: boolean;
+  twoFactorSecret: string | null;
+  loginHistory: Array<{
+    timestamp: string;
+    details: string;
+  }>;
 }

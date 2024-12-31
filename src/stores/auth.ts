@@ -1,12 +1,16 @@
 import { defineStore } from 'pinia';
-import { AuthService } from '@/services/auth';
-import type { AuthState, LoginCredentials, RegisterData, User, UserProfile } from '@/types/user';
+import { AuthService } from '../services/auth';
+import { TwoFactorAuthService } from '../services/2fa';
+import type { AuthState, LoginCredentials, RegisterData, User, UserProfile } from '../types/user';
 
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
     user: null,
     isAuthenticated: false,
     token: null,
+    twoFactorEnabled: false,
+    twoFactorSecret: null,
+    loginHistory: [],
   }),
 
   getters: {
@@ -30,10 +34,33 @@ export const useAuthStore = defineStore('auth', {
     async login(credentials: LoginCredentials) {
       try {
         const { user, token } = await AuthService.login(credentials);
+        
+        // If 2FA is enabled, verify the token before completing login
+        if (this.twoFactorEnabled && !credentials.totpToken) {
+          throw new Error('2FA token required');
+        }
+        
+        if (this.twoFactorEnabled && credentials.totpToken) {
+          const isValid = TwoFactorAuthService.verifyToken(
+            credentials.totpToken,
+            this.twoFactorSecret!
+          );
+          if (!isValid) {
+            throw new Error('Invalid 2FA token');
+          }
+        }
+
         this.user = user;
         this.token = token;
         this.isAuthenticated = true;
         localStorage.setItem('token', token);
+        
+        // Record login history
+        this.loginHistory.unshift({
+          timestamp: new Date().toISOString(),
+          details: `Logged in as ${user.email}`,
+        });
+        
         return user;
       } catch (error) {
         console.error('Login failed:', error);
