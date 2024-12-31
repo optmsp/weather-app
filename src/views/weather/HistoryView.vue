@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useWeatherStore } from '../stores/weather'
-import { useAuthStore } from '../stores/auth'
+import { useWeatherStore } from '@/stores/weather'
+import { useAuthStore } from '@/stores/auth'
 
 const weatherStore = useWeatherStore()
 const authStore = useAuthStore()

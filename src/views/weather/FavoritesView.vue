@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import CitySearch from '../components/weather/CitySearch.vue'
-import WeatherCard from '../components/weather/WeatherCard.vue'
-import { useWeatherStore } from '../stores/weather'
+import CitySearch from '@/components/weather/CitySearch.vue'
+import WeatherCard from '@/components/weather/WeatherCard.vue'
+import { useWeatherStore } from '@/stores/weather'
 
 const weatherStore = useWeatherStore()
 const { currentWeather, favorites, loading, error } = storeToRefs(weatherStore)
