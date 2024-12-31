@@ -1,25 +1,29 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import CitySearch from '@/components/weather/CitySearch.vue';
-import WeatherCard from '@/components/weather/WeatherCard.vue';
+import { onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
+import CitySearch from '../components/weather/CitySearch.vue';
+import WeatherCard from '../components/weather/WeatherCard.vue';
+import { useWeatherStore } from '../stores/weather';
 
-const favorites = ref<string[]>([]);
-const weatherData = ref<any[]>([]);
+const weatherStore = useWeatherStore();
+const { currentWeather, favorites, loading, error } = storeToRefs(weatherStore);
 
-onMounted(() => {
-  // TODO: Load favorites from store/API
+onMounted(async () => {
+  await weatherStore.refreshFavorites();
 });
 
 const handleSearch = async (query: string) => {
-  // TODO: Implement weather search
+  await weatherStore.searchLocation(query);
 };
 
 const handleUseCurrentLocation = async () => {
-  // TODO: Implement geolocation weather search
+  await weatherStore.getCurrentLocationWeather();
 };
 
-const toggleFavorite = (location: string) => {
-  // TODO: Implement favorite toggling
+const toggleFavorite = () => {
+  if (currentWeather.value) {
+    weatherStore.toggleFavorite(currentWeather.value);
+  }
 };
 </script>
 
@@ -33,12 +37,31 @@ const toggleFavorite = (location: string) => {
     />
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <WeatherCard
-        v-for="weather in weatherData"
-        :key="weather.location"
-        :weather="weather"
-        @toggle-favorite="toggleFavorite"
-      />
+      <div v-if="loading" class="text-center py-8">
+        <span class="loading loading-spinner loading-lg"></span>
+      </div>
+      
+      <div v-else-if="error" class="alert alert-error">
+        {{ error }}
+      </div>
+      
+      <template v-else>
+        <WeatherCard
+          v-if="currentWeather"
+          :weather="currentWeather"
+          @toggle-favorite="toggleFavorite"
+        />
+        
+        <template v-if="favorites.length > 0">
+          <h2 class="text-2xl font-bold mt-8 mb-4">Favorites</h2>
+          <WeatherCard
+            v-for="weather in favorites"
+            :key="weather.location"
+            :weather="weather"
+            @toggle-favorite="() => weatherStore.toggleFavorite(weather)"
+          />
+        </template>
+      </template>
     </div>
   </div>
 </template>

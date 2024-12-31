@@ -1,16 +1,37 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useWeatherStore } from '../stores/weather';
+import { useAuthStore } from '../stores/auth';
 
-interface HistoryEntry {
-  type: 'search' | 'favorite' | 'login';
-  timestamp: string;
-  details: string;
-}
+const weatherStore = useWeatherStore();
+const authStore = useAuthStore();
 
-const history = ref<HistoryEntry[]>([]);
+const { searchHistory, favoriteHistory } = storeToRefs(weatherStore);
+const { loginHistory } = storeToRefs(authStore);
 
-onMounted(() => {
-  // TODO: Load history from store/API
+const allHistory = computed(() => {
+  const combined = [
+    ...searchHistory.value.map(entry => ({
+      type: 'search' as const,
+      timestamp: entry.timestamp,
+      details: `Searched for "${entry.query}"`
+    })),
+    ...favoriteHistory.value.map(entry => ({
+      type: 'favorite' as const,
+      timestamp: entry.timestamp,
+      details: `${entry.action === 'add' ? 'Added' : 'Removed'} ${entry.location} ${entry.action === 'add' ? 'to' : 'from'} favorites`
+    })),
+    ...loginHistory.value.map(entry => ({
+      type: 'login' as const,
+      timestamp: entry.timestamp,
+      details: entry.details
+    }))
+  ];
+
+  return combined.sort((a, b) => 
+    new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+  );
 });
 </script>
 
@@ -19,7 +40,7 @@ onMounted(() => {
     <h1 class="text-3xl font-bold mb-8">Activity History</h1>
 
     <div class="space-y-4">
-      <div v-for="entry in history" :key="entry.timestamp" class="card bg-base-100 shadow">
+      <div v-for="entry in allHistory" :key="entry.timestamp" class="card bg-base-100 shadow">
         <div class="card-body">
           <div class="flex justify-between items-center">
             <div>
