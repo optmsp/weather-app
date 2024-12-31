@@ -17,6 +17,7 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.7",
     "@vue/cli-service": "~5.0.8",
+    "@vueuse/core": "^12.2.0",
     "bcryptjs": "^2.4.3",
     "json-server": "^1.0.0-beta.3",
     "jsonwebtoken": "^9.0.2",
