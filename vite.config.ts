@@ -21,9 +21,16 @@ export default defineConfig({
     }
   },
   server: {
-    host: '0.0.0.0',
+    host: true,
     port: 5173,
-    strictPort: true
+    strictPort: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
   },
   optimizeDeps: {
     esbuildOptions: {
