@@ -1,51 +1,51 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useAuthStore } from '@/stores/auth';
-import type { RegisterData } from '@/types/user';
-import { validateEmail, validatePassword, validateName } from '@/utils/validation';
+import { ref } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+import type { RegisterData } from '@/types/user'
+import { validateEmail, validatePassword, validateName } from '@/utils/validation'
 
-const authStore = useAuthStore();
-const name = ref('');
-const email = ref('');
-const password = ref('');
-const error = ref('');
-const loading = ref(false);
+const authStore = useAuthStore()
+const name = ref('')
+const email = ref('')
+const password = ref('')
+const error = ref('')
+const loading = ref(false)
 
 const validateForm = (): boolean => {
   if (!validateName(name.value)) {
-    error.value = 'Name must be between 2 and 50 characters';
-    return false;
+    error.value = 'Name must be between 2 and 50 characters'
+    return false
   }
   if (!validateEmail(email.value)) {
-    error.value = 'Please enter a valid email address';
-    return false;
+    error.value = 'Please enter a valid email address'
+    return false
   }
   if (!validatePassword(password.value)) {
-    error.value = 'Password must be at least 8 characters with uppercase, lowercase, and numbers';
-    return false;
+    error.value = 'Password must be at least 8 characters with uppercase, lowercase, and numbers'
+    return false
   }
-  return true;
-};
+  return true
+}
 
 const handleSubmit = async () => {
-  error.value = '';
-  if (!validateForm()) return;
+  error.value = ''
+  if (!validateForm()) return
 
-  loading.value = true;
+  loading.value = true
   try {
     const userData: RegisterData = {
       name: name.value,
       email: email.value,
       password: password.value,
-    };
-    await authStore.register(userData);
+    }
+    await authStore.register(userData)
     // Redirect to setup 2FA or dashboard
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Registration failed';
+    error.value = e instanceof Error ? e.message : 'Registration failed'
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 </script>
 
 <template>
@@ -102,11 +102,7 @@ const handleSubmit = async () => {
         </div>
 
         <div>
-          <button
-            type="submit"
-            :disabled="loading"
-            class="btn btn-primary w-full"
-          >
+          <button type="submit" :disabled="loading" class="btn btn-primary w-full">
             {{ loading ? 'Creating account...' : 'Create account' }}
           </button>
         </div>

@@ -1,27 +1,27 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useGeolocation } from '@vueuse/core';
+import { ref } from 'vue'
+import { useGeolocation } from '@vueuse/core'
 
 const emit = defineEmits<{
-  (e: 'search', query: string): void;
-  (e: 'useCurrentLocation'): void;
-}>();
+  (e: 'search', query: string): void
+  (e: 'useCurrentLocation'): void
+}>()
 
-const searchQuery = ref('');
-const { coords, isSupported } = useGeolocation();
+const searchQuery = ref('')
+const { coords, isSupported } = useGeolocation()
 
 const handleSubmit = () => {
   if (searchQuery.value.trim()) {
-    emit('search', searchQuery.value.trim());
-    searchQuery.value = '';
+    emit('search', searchQuery.value.trim())
+    searchQuery.value = ''
   }
-};
+}
 
 const useCurrentLocation = () => {
   if (coords.value) {
-    emit('useCurrentLocation');
+    emit('useCurrentLocation')
   }
-};
+}
 </script>
 
 <template>
@@ -35,7 +35,7 @@ const useCurrentLocation = () => {
       />
       <button type="submit" class="btn btn-primary">Search</button>
     </form>
-    
+
     <button
       v-if="isSupported"
       @click="useCurrentLocation"

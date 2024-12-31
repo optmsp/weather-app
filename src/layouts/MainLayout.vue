@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { useAuthStore } from '@/stores/auth';
-import { computed } from 'vue';
+import { useAuthStore } from '@/stores/auth'
+import { computed } from 'vue'
 
-const authStore = useAuthStore();
-const isLoggedIn = computed(() => authStore.isLoggedIn);
-const currentUser = computed(() => authStore.currentUser);
+const authStore = useAuthStore()
+const isLoggedIn = computed(() => authStore.isLoggedIn)
+const currentUser = computed(() => authStore.currentUser)
 
 const handleLogout = () => {
-  authStore.logout();
+  authStore.logout()
   // TODO: Redirect to login page
-};
+}
 </script>
 
 <template>

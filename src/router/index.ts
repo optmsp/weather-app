@@ -13,46 +13,46 @@ const router = createRouter({
           path: '',
           name: 'home',
           component: () => import('@/views/weather/FavoritesView.vue'),
-          meta: { requiresAuth: true }
+          meta: { requiresAuth: true },
         },
         {
           path: 'favorites',
           name: 'favorites',
           component: () => import('@/views/weather/FavoritesView.vue'),
-          meta: { requiresAuth: true }
+          meta: { requiresAuth: true },
         },
         {
           path: 'history',
           name: 'history',
           component: () => import('@/views/weather/HistoryView.vue'),
-          meta: { requiresAuth: true }
+          meta: { requiresAuth: true },
         },
         {
           path: 'profile',
           name: 'profile',
           component: () => import('@/components/profile/ProfileForm.vue'),
-          meta: { requiresAuth: true }
+          meta: { requiresAuth: true },
         },
         {
           path: 'login',
           name: 'login',
           component: () => import('@/components/auth/LoginForm.vue'),
-          meta: { requiresAuth: false }
+          meta: { requiresAuth: false },
         },
         {
           path: 'register',
           name: 'register',
           component: () => import('@/components/auth/RegisterForm.vue'),
-          meta: { requiresAuth: false }
-        }
-      ]
-    }
-  ]
+          meta: { requiresAuth: false },
+        },
+      ],
+    },
+  ],
 })
 
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
 
   if (requiresAuth && !authStore.isAuthenticated) {
     next('/login')

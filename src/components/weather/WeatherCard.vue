@@ -1,26 +1,26 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 
 interface WeatherData {
-  temperature: number;
-  humidity: number;
-  windSpeed: number;
-  description: string;
-  location: string;
-  isFavorite?: boolean;
+  temperature: number
+  humidity: number
+  windSpeed: number
+  description: string
+  location: string
+  isFavorite?: boolean
 }
 
 const props = defineProps<{
-  weather: WeatherData;
-}>();
+  weather: WeatherData
+}>()
 
 const emit = defineEmits<{
-  (e: 'toggleFavorite', location: string): void;
-}>();
+  (e: 'toggleFavorite', location: string): void
+}>()
 
-const temperatureFormatted = computed(() => `${props.weather.temperature}°C`);
-const windSpeedFormatted = computed(() => `${props.weather.windSpeed} km/h`);
-const humidityFormatted = computed(() => `${props.weather.humidity}%`);
+const temperatureFormatted = computed(() => `${props.weather.temperature}°C`)
+const windSpeedFormatted = computed(() => `${props.weather.windSpeed} km/h`)
+const humidityFormatted = computed(() => `${props.weather.humidity}%`)
 </script>
 
 <template>
@@ -28,17 +28,14 @@ const humidityFormatted = computed(() => `${props.weather.humidity}%`);
     <div class="card-body">
       <div class="flex justify-between items-start">
         <h2 class="card-title">{{ weather.location }}</h2>
-        <button
-          class="btn btn-ghost btn-circle"
-          @click="emit('toggleFavorite', weather.location)"
-        >
+        <button class="btn btn-ghost btn-circle" @click="emit('toggleFavorite', weather.location)">
           <span class="text-2xl">{{ weather.isFavorite ? '★' : '☆' }}</span>
         </button>
       </div>
-      
+
       <p class="text-4xl font-bold my-4">{{ temperatureFormatted }}</p>
       <p class="text-lg">{{ weather.description }}</p>
-      
+
       <div class="grid grid-cols-2 gap-4 mt-4">
         <div class="stat-box">
           <div class="stat-label">Wind Speed</div>

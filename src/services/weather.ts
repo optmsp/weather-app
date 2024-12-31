@@ -1,35 +1,35 @@
-import type { Ref } from 'vue';
-import { useGeolocation } from '@vueuse/core';
+import type { Ref } from 'vue'
+import { useGeolocation } from '@vueuse/core'
 
 interface WeatherResponse {
   current: {
-    temperature_2m: number;
-    relative_humidity_2m: number;
-    wind_speed_10m: number;
-    weather_code: number;
-  };
+    temperature_2m: number
+    relative_humidity_2m: number
+    wind_speed_10m: number
+    weather_code: number
+  }
 }
 
 interface GeocodingResponse {
   results?: Array<{
-    name: string;
-    latitude: number;
-    longitude: number;
-    country: string;
-    admin1?: string;
-  }>;
+    name: string
+    latitude: number
+    longitude: number
+    country: string
+    admin1?: string
+  }>
 }
 
 export interface WeatherData {
-  temperature: number;
-  humidity: number;
-  windSpeed: number;
-  description: string;
-  location: string;
+  temperature: number
+  humidity: number
+  windSpeed: number
+  description: string
+  location: string
   coordinates: {
-    latitude: number;
-    longitude: number;
-  };
+    latitude: number
+    longitude: number
+  }
 }
 
 const WEATHER_CODES: Record<number, string> = {
@@ -49,19 +49,22 @@ const WEATHER_CODES: Record<number, string> = {
   73: 'Moderate snow fall',
   75: 'Heavy snow fall',
   95: 'Thunderstorm',
-};
+}
 
 export class WeatherService {
-  private static async fetchWeatherData(latitude: number, longitude: number): Promise<WeatherData | null> {
+  private static async fetchWeatherData(
+    latitude: number,
+    longitude: number,
+  ): Promise<WeatherData | null> {
     try {
       const response = await fetch(
-        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code`
-      );
-      
-      if (!response.ok) throw new Error('Weather data fetch failed');
-      
-      const data: WeatherResponse = await response.json();
-      
+        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code`,
+      )
+
+      if (!response.ok) throw new Error('Weather data fetch failed')
+
+      const data: WeatherResponse = await response.json()
+
       return {
         temperature: data.current.temperature_2m,
         humidity: data.current.relative_humidity_2m,
@@ -72,70 +75,70 @@ export class WeatherService {
           latitude,
           longitude,
         },
-      };
+      }
     } catch (error) {
-      console.error('Error fetching weather data:', error);
-      return null;
+      console.error('Error fetching weather data:', error)
+      return null
     }
   }
 
   static async searchLocation(query: string): Promise<WeatherData | null> {
     try {
       const response = await fetch(
-        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=en&format=json`
-      );
-      
-      if (!response.ok) throw new Error('Location search failed');
-      
-      const data: GeocodingResponse = await response.json();
-      
-      if (!data.results?.[0]) return null;
-      
-      const location = data.results[0];
-      const weatherData = await this.fetchWeatherData(location.latitude, location.longitude);
-      
-      if (!weatherData) return null;
-      
-      weatherData.location = `${location.name}${location.admin1 ? `, ${location.admin1}` : ''}, ${location.country}`;
-      return weatherData;
+        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=en&format=json`,
+      )
+
+      if (!response.ok) throw new Error('Location search failed')
+
+      const data: GeocodingResponse = await response.json()
+
+      if (!data.results?.[0]) return null
+
+      const location = data.results[0]
+      const weatherData = await this.fetchWeatherData(location.latitude, location.longitude)
+
+      if (!weatherData) return null
+
+      weatherData.location = `${location.name}${location.admin1 ? `, ${location.admin1}` : ''}, ${location.country}`
+      return weatherData
     } catch (error) {
-      console.error('Error searching location:', error);
-      return null;
+      console.error('Error searching location:', error)
+      return null
     }
   }
 
   static async getCurrentLocationWeather(): Promise<WeatherData | null> {
-    const { coords } = useGeolocation({ enableHighAccuracy: true });
-    
+    const { coords } = useGeolocation({ enableHighAccuracy: true })
+
     if (!coords.value?.latitude || !coords.value?.longitude) {
-      throw new Error('Location not available');
+      throw new Error('Location not available')
     }
 
-    const weatherData = await this.fetchWeatherData(coords.value.latitude, coords.value.longitude);
-    
-    if (!weatherData) return null;
+    const weatherData = await this.fetchWeatherData(coords.value.latitude, coords.value.longitude)
+
+    if (!weatherData) return null
 
     try {
       const response = await fetch(
-        `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${coords.value.latitude}&longitude=${coords.value.longitude}&language=en&format=json`
-      );
-      
-      if (!response.ok) throw new Error('Reverse geocoding failed');
-      
-      const data: GeocodingResponse = await response.json();
-      
+        `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${coords.value.latitude}&longitude=${coords.value.longitude}&language=en&format=json`,
+      )
+
+      if (!response.ok) throw new Error('Reverse geocoding failed')
+
+      const data: GeocodingResponse = await response.json()
+
       if (data.results?.[0]) {
-        const location = data.results[0];
-        weatherData.location = `${location.name}${location.admin1 ? `, ${location.admin1}` : ''}, ${location.country}`;
+        const location = data.results[0]
+        weatherData.location = `${location.name}${location.admin1 ? `, ${location.admin1}` : ''}, ${location.country}`
       } else {
-        weatherData.location = `${coords.value.latitude.toFixed(2)}, ${coords.value.longitude.toFixed(2)}`;
+        weatherData.location = `${coords.value.latitude.toFixed(2)}, ${coords.value.longitude.toFixed(2)}`
       }
-      
-      return weatherData;
+
+      return weatherData
     } catch (error) {
-      console.error('Error getting location name:', error);
-      weatherData.location = `${coords.value.latitude.toFixed(2)}, ${coords.value.longitude.toFixed(2)}`;
-      return weatherData;
+      console.error('Error getting location name:', error)
+      weatherData.location = `${coords.value.latitude.toFixed(2)}, ${coords.value.longitude.toFixed(2)}`
+      return weatherData
     }
   }
 }
