@@ -1,6 +1,14 @@
+/**
+ * Weather store module for managing weather data and user preferences.
+ * @module stores/weather
+ */
+
 import { defineStore } from 'pinia'
 import { WeatherService, type WeatherData } from '../services/weather'
 
+/**
+ * Interface representing the weather store state.
+ */
 interface WeatherState {
   currentWeather: WeatherData | null
   favorites: WeatherData[]
@@ -32,7 +40,14 @@ export const useWeatherStore = defineStore('weather', {
       state.favorites.some((fav) => fav.location === location),
   },
 
+  /** Store actions for weather operations */
   actions: {
+    /**
+     * Searches for weather data by location name.
+     * Updates search history on successful search.
+     * @param {string} query - Location name to search for
+     * @throws {Error} If location search fails
+     */
     async searchLocation(query: string) {
       this.loading = true
       this.error = null
@@ -56,6 +71,11 @@ export const useWeatherStore = defineStore('weather', {
       }
     },
 
+    /**
+     * Gets weather data for the user's current location.
+     * Uses browser geolocation API.
+     * @throws {Error} If geolocation fails or weather data fetch fails
+     */
     async getCurrentLocationWeather() {
       this.loading = true
       this.error = null
@@ -75,6 +95,11 @@ export const useWeatherStore = defineStore('weather', {
       }
     },
 
+    /**
+     * Toggles a location's favorite status.
+     * Records the action in favorite history.
+     * @param {WeatherData} weather - Weather data for the location to toggle
+     */
     toggleFavorite(weather: WeatherData) {
       const index = this.favorites.findIndex((fav) => fav.location === weather.location)
 
@@ -95,6 +120,11 @@ export const useWeatherStore = defineStore('weather', {
       }
     },
 
+    /**
+     * Refreshes weather data for all favorite locations.
+     * Removes any locations that can no longer be found.
+     * @returns {Promise<void>}
+     */
     async refreshFavorites() {
       const updatedFavorites = await Promise.all(
         this.favorites.map(async (favorite) => {

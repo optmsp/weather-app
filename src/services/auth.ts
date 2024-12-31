@@ -22,6 +22,10 @@ function generateToken(payload: object): string {
   return `${encodedHeader}.${encodedPayload}.${signature}`
 }
 
+/**
+ * Service class for handling authentication operations.
+ * Provides methods for user registration, login, profile management, and 2FA.
+ */
 export class AuthService {
   static async register(data: RegisterData): Promise<User> {
     const hashedPassword = await hashPassword(data.password)

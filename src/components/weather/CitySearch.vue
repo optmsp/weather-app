@@ -1,3 +1,11 @@
+<!--
+  @component CitySearch
+  @description Search component for finding cities and getting their weather.
+  Supports both city name search and current location detection using browser geolocation.
+  
+  @emits {string} search - Emits the search query when form is submitted
+  @emits {void} useCurrentLocation - Emits when user requests to use their current location
+-->
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useGeolocation } from '@vueuse/core'

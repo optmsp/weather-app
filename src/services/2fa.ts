@@ -3,6 +3,12 @@ export interface TwoFactorAuthData {
   qrCodeUrl: string
 }
 
+/**
+ * Service class for handling two-factor authentication operations.
+ * Provides methods for generating and validating TOTP tokens.
+ * Note: This is a development implementation and should be replaced
+ * with proper TOTP implementation in production.
+ */
 export class TwoFactorAuthService {
   private static readonly APP_NAME = 'Weather App'
 

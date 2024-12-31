@@ -1,3 +1,11 @@
+<!--
+  @component RegisterForm
+  @description Registration form component that handles user sign-up.
+  Includes email validation, password strength checking, and form submission.
+  
+  @emits {RegisterData} submit - Emits registration data when form is submitted successfully
+  @emits {void} error - Emits when validation or registration fails
+-->
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'

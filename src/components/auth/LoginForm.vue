@@ -1,3 +1,12 @@
+<!--
+  @component LoginForm
+  @description Login form component with 2FA support.
+  Handles user authentication and two-factor authentication flow.
+  
+  @emits {LoginCredentials} submit - Emits login credentials when form is submitted
+  @emits {void} error - Emits when validation or login fails
+  @emits {void} requires2fa - Emits when 2FA verification is required
+-->
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'

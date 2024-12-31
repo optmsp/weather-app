@@ -1,3 +1,11 @@
+<!--
+  @component WeatherCard
+  @description Displays detailed weather information for a location.
+  Shows temperature, humidity, wind speed, and allows favoriting.
+  
+  @prop {WeatherData} weather - Weather data to display
+  @emits {string} toggleFavorite - Emits location string when favorite status is toggled
+-->
 <script setup lang="ts">
 import { computed } from 'vue'
 

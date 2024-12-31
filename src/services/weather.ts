@@ -51,6 +51,10 @@ const WEATHER_CODES: Record<number, string> = {
   95: 'Thunderstorm',
 }
 
+/**
+ * Service class for handling weather-related operations.
+ * Provides methods for fetching weather data and managing location information.
+ */
 export class WeatherService {
   private static async fetchWeatherData(
     latitude: number,
