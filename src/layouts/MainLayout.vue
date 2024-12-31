@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth'
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
+const router = useRouter()
 const isLoggedIn = computed(() => {
   console.log('Auth state:', authStore.isAuthenticated)
   return authStore.isAuthenticated
@@ -11,7 +13,7 @@ const currentUser = computed(() => authStore.currentUser)
 
 const handleLogout = () => {
   authStore.logout()
-  // TODO: Redirect to login page
+  router.push('/login')
 }
 </script>
 
@@ -39,10 +41,10 @@ const handleLogout = () => {
           </template>
           <template v-else>
             <li>
-              <router-link to="/login">Login</router-link>
+              <router-link to="/login" class="btn btn-ghost" @click="console.log('Login clicked')">Login</router-link>
             </li>
             <li>
-              <router-link to="/register">Register</router-link>
+              <router-link to="/register" class="btn btn-ghost" @click="console.log('Register clicked')">Register</router-link>
             </li>
           </template>
         </ul>

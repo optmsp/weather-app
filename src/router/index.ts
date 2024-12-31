@@ -38,15 +38,21 @@ const router = createRouter({
           name: 'login',
           component: () => import('@/components/auth/LoginForm.vue'),
           meta: { requiresAuth: false },
+          alias: '/auth/login'
         },
         {
           path: 'register',
           name: 'register',
           component: () => import('@/components/auth/RegisterForm.vue'),
           meta: { requiresAuth: false },
+          alias: '/auth/register'
         },
       ],
     },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/login'
+    }
   ],
 })
 
