@@ -8,10 +8,15 @@
       "twoFactorEnabled": false,
       "twoFactorSecret": null,
       "profile": {
-        "name": "Test User",
-        "defaultLocation": null,
-        "temperatureUnit": "celsius"
+        "name": "Updated User",
+        "defaultLocation": "Berlin"
       }
+    },
+    {
+      "id": "e5c3",
+      "username": "newuser",
+      "email": "new@example.com",
+      "password": "NewPass123!"
     }
   ],
   "sessions": [],
