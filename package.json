@@ -10,7 +10,8 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "mock-api": "json-server --watch db.json --port 3000"
   },
   "dependencies": {
     "@types/bcryptjs": "^2.4.6",
