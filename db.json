@@ -1,9 +1,30 @@
 {
-  "users": [],
+  "users": [
+    {
+      "id": "eca5",
+      "username": "testuser",
+      "email": "test@example.com",
+      "password": "Test123!",
+      "twoFactorEnabled": false,
+      "twoFactorSecret": null,
+      "profile": {
+        "name": "Test User",
+        "defaultLocation": null,
+        "temperatureUnit": "celsius"
+      }
+    }
+  ],
+  "sessions": [],
   "favorites": [],
   "history": {
     "searches": [],
-    "logins": [],
+    "logins": [
+      {
+        "userId": "eca5",
+        "timestamp": "2024-12-31T05:00:00Z",
+        "success": true
+      }
+    ],
     "favorites": []
   }
 }
