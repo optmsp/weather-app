@@ -21,7 +21,7 @@ export default defineConfig({
     }
   },
   server: {
-    host: true,
+    host: '0.0.0.0',
     port: 4000,
     strictPort: true,
     proxy: {
@@ -30,6 +30,9 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
+    },
+    hmr: {
+      clientPort: 443
     }
   },
   optimizeDeps: {
