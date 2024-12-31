@@ -10,8 +10,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
 import type { LoginCredentials } from '@/types/user'
 import { validateEmail, validateTOTP } from '@/utils/validation'
+
+const router = useRouter()
 
 const authStore = useAuthStore()
 const email = ref('')
@@ -45,7 +48,7 @@ const handleSubmit = async () => {
       ...(requires2FA.value && { totpCode: totpCode.value }),
     }
     await authStore.login(credentials)
-    // Redirect to dashboard
+    router.push('/favorites')
   } catch (e) {
     const err = e as Error
     if (err.message === '2FA code required') {

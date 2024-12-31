@@ -9,8 +9,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
 import type { RegisterData } from '@/types/user'
 import { validateEmail, validatePassword, validateName } from '@/utils/validation'
+
+const router = useRouter()
 
 const authStore = useAuthStore()
 const name = ref('')
@@ -47,7 +50,7 @@ const handleSubmit = async () => {
       password: password.value,
     }
     await authStore.register(userData)
-    // Redirect to setup 2FA or dashboard
+    router.push('/favorites')
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Registration failed'
   } finally {
