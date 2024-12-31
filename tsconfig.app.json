@@ -9,11 +9,18 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["node", "vite/client"],
+    "types": ["node", "vite/client", "@vue/runtime-core"],
     "moduleResolution": "bundler",
     "allowJs": true,
     "esModuleInterop": true,
     "isolatedModules": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "jsx": "preserve",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "target": "ESNext",
+    "module": "ESNext",
+    "resolveJsonModule": true,
+    "strict": true,
+    "noEmit": true
   }
 }
