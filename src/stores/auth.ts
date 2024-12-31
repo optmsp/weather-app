@@ -13,14 +13,17 @@ import type { AuthState, LoginCredentials, RegisterData, User, UserProfile } fro
  * Handles user registration, login, profile updates, and 2FA operations.
  */
 export const useAuthStore = defineStore('auth', {
-  state: (): AuthState => ({
-    user: null,
-    isAuthenticated: false,
-    token: null,
-    twoFactorEnabled: false,
-    twoFactorSecret: null,
-    loginHistory: [],
-  }),
+  state: (): AuthState => {
+    const token = localStorage.getItem('token')
+    return {
+      user: null,
+      isAuthenticated: !!token,
+      token: token,
+      twoFactorEnabled: false,
+      twoFactorSecret: null,
+      loginHistory: [],
+    }
+  },
 
   getters: {
     currentUser: (state) => state.user,

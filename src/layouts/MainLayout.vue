@@ -3,7 +3,10 @@ import { useAuthStore } from '@/stores/auth'
 import { computed } from 'vue'
 
 const authStore = useAuthStore()
-const isLoggedIn = computed(() => authStore.isLoggedIn)
+const isLoggedIn = computed(() => {
+  console.log('Auth state:', authStore.isAuthenticated)
+  return authStore.isAuthenticated
+})
 const currentUser = computed(() => authStore.currentUser)
 
 const handleLogout = () => {
