@@ -12,12 +12,22 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      crypto: 'crypto-browserify',
+      stream: 'stream-browserify',
+      util: 'util'
     }
   },
   server: {
     host: '0.0.0.0',
     port: 5173,
     strictPort: true
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      define: {
+        global: 'globalThis'
+      }
+    }
   }
 })

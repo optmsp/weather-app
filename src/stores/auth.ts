@@ -36,14 +36,14 @@ export const useAuthStore = defineStore('auth', {
         const { user, token } = await AuthService.login(credentials)
 
         // If 2FA is enabled, verify the token before completing login
-        if (this.twoFactorEnabled && !credentials.totpToken) {
+        if (this.twoFactorEnabled && !credentials.totpCode) {
           throw new Error('2FA token required')
         }
 
-        if (this.twoFactorEnabled && credentials.totpToken) {
+        if (this.twoFactorEnabled && credentials.totpCode) {
           const isValid = TwoFactorAuthService.verifyToken(
-            credentials.totpToken,
             this.twoFactorSecret!,
+            credentials.totpCode,
           )
           if (!isValid) {
             throw new Error('Invalid 2FA token')
