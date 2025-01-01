@@ -19,44 +19,74 @@ const handleLogout = () => {
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col">
-    <header class="navbar bg-base-100 shadow-lg">
-      <div class="flex-1">
-        <router-link to="/" class="btn btn-ghost normal-case text-xl">Weather App</router-link>
+  <div class="layout-container">
+    <header class="layout-header">
+      <div class="header-brand">
+        <router-link to="/" class="brand-link">Weather App</router-link>
       </div>
-      <div class="flex-none">
-        <ul class="menu menu-horizontal px-1">
+      <div class="header-nav">
+        <ul class="nav-list">
           <template v-if="isLoggedIn">
             <li>
-              <router-link to="/favorites">Favorites</router-link>
+              <router-link to="/favorites" class="nav-link">Favorites</router-link>
             </li>
             <li>
-              <router-link to="/history">History</router-link>
+              <router-link to="/history" class="nav-link">History</router-link>
             </li>
             <li>
-              <router-link to="/profile">Profile</router-link>
+              <router-link to="/profile" class="nav-link">Profile</router-link>
             </li>
             <li>
-              <button @click="handleLogout">Logout</button>
+              <button @click="handleLogout" class="nav-link">Logout</button>
             </li>
           </template>
           <template v-else>
             <li>
-              <router-link to="/login">Login</router-link>
+              <router-link to="/login" class="nav-link">Login</router-link>
             </li>
             <li>
-              <router-link to="/register">Register</router-link>
+              <router-link to="/register" class="nav-link">Register</router-link>
             </li>
           </template>
         </ul>
       </div>
     </header>
-    <main class="flex-grow">
+    <main class="layout-main">
       <router-view></router-view>
     </main>
   </div>
 </template>
 
 <style scoped>
-/* Add your styles here */
+.layout-container {
+  @apply min-h-screen flex flex-col;
+}
+
+.layout-header {
+  @apply navbar bg-base-100 shadow-lg;
+}
+
+.header-brand {
+  @apply flex-1;
+}
+
+.brand-link {
+  @apply btn btn-ghost normal-case text-xl;
+}
+
+.header-nav {
+  @apply flex-none;
+}
+
+.nav-list {
+  @apply menu menu-horizontal px-1;
+}
+
+.nav-link {
+  @apply hover:bg-base-200 rounded-lg transition-colors duration-200;
+}
+
+.layout-main {
+  @apply flex-grow;
+}
 </style>

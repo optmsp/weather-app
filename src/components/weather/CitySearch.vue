@@ -34,20 +34,20 @@ const useCurrentLocation = () => {
 
 <template>
   <div class="city-search-bar">
-    <form @submit.prevent="handleSubmit" class="flex-grow flex gap-2">
+    <form @submit.prevent="handleSubmit" class="city-search-form">
       <input
         v-model="searchQuery"
         type="text"
         placeholder="Search for a city..."
-        class="input input-bordered w-full"
+        class="city-search-input"
       />
-      <button type="submit" class="btn btn-primary">Search</button>
+      <button type="submit" class="city-search-button">Search</button>
     </form>
 
     <button
       v-if="isSupported"
       @click="useCurrentLocation"
-      class="btn btn-secondary"
+      class="location-button"
       :disabled="!coords"
     >
       Use My Location
@@ -56,9 +56,25 @@ const useCurrentLocation = () => {
 </template>
 
 <!-- place the search bar at the top-right in the content area -->
-<style>
+<style scoped>
 .city-search-bar {
   @apply flex gap-4 justify-end;
   margin-bottom: 1rem;
+}
+
+.city-search-form {
+  @apply flex-grow flex gap-2;
+}
+
+.city-search-input {
+  @apply input input-bordered w-full;
+}
+
+.city-search-button {
+  @apply btn btn-primary;
+}
+
+.location-button {
+  @apply btn btn-secondary;
 }
 </style>

@@ -60,60 +60,40 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight">
-        Create your account
-      </h2>
+  <div class="register-container">
+    <div class="register-header-container">
+      <h2 class="register-title">Create your account</h2>
     </div>
 
-    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form class="space-y-6" @submit.prevent="handleSubmit">
+    <div class="register-form-container">
+      <form class="register-form" @submit.prevent="handleSubmit">
         <div>
-          <label for="name" class="block text-sm font-medium leading-6">Name</label>
-          <div class="mt-2">
-            <input
-              id="name"
-              v-model="name"
-              type="text"
-              required
-              class="input input-bordered w-full"
-            />
+          <label for="name" class="form-label">Name</label>
+          <div class="input-container">
+            <input id="name" v-model="name" type="text" required class="form-input" />
           </div>
         </div>
 
         <div>
-          <label for="email" class="block text-sm font-medium leading-6">Email address</label>
-          <div class="mt-2">
-            <input
-              id="email"
-              v-model="email"
-              type="email"
-              required
-              class="input input-bordered w-full"
-            />
+          <label for="email" class="form-label">Email address</label>
+          <div class="input-container">
+            <input id="email" v-model="email" type="email" required class="form-input" />
           </div>
         </div>
 
         <div>
-          <label for="password" class="block text-sm font-medium leading-6">Password</label>
-          <div class="mt-2">
-            <input
-              id="password"
-              v-model="password"
-              type="password"
-              required
-              class="input input-bordered w-full"
-            />
+          <label for="password" class="form-label">Password</label>
+          <div class="input-container">
+            <input id="password" v-model="password" type="password" required class="form-input" />
           </div>
         </div>
 
-        <div v-if="error" class="alert alert-error">
+        <div v-if="error" class="error-message">
           {{ error }}
         </div>
 
         <div>
-          <button type="submit" :disabled="loading" class="btn btn-primary w-full">
+          <button type="submit" :disabled="loading" class="submit-button">
             {{ loading ? 'Creating account...' : 'Create account' }}
           </button>
         </div>
@@ -121,3 +101,45 @@ const handleSubmit = async () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.register-container {
+  @apply flex min-h-full flex-col justify-center px-6 py-12 lg:px-8;
+}
+
+.register-header-container {
+  @apply sm:mx-auto sm:w-full sm:max-w-sm;
+}
+
+.register-title {
+  @apply mt-10 text-center text-2xl font-bold leading-9 tracking-tight;
+}
+
+.register-form-container {
+  @apply mt-10 sm:mx-auto sm:w-full sm:max-w-sm;
+}
+
+.register-form {
+  @apply space-y-6;
+}
+
+.form-label {
+  @apply block text-sm font-medium leading-6;
+}
+
+.input-container {
+  @apply mt-2;
+}
+
+.form-input {
+  @apply input input-bordered w-full;
+}
+
+.submit-button {
+  @apply btn btn-primary w-full;
+}
+
+.error-message {
+  @apply alert alert-error;
+}
+</style>
