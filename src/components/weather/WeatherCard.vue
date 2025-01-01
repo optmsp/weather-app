@@ -81,11 +81,11 @@ const humidityFormatted = computed(() => `${props.weather.humidity}%`)
 }
 
 .favorite-button {
-  @apply btn btn-ghost btn-circle;
+  @apply btn btn-ghost btn-circle ring-0 hover:ring-2 ring-primary transition-all duration-200 active:ring-2;
 }
 
 .favorite-icon {
-  @apply text-2xl;
+  @apply text-2xl transition-transform duration-200 hover:scale-110 inline-block;
 }
 
 .temperature {
