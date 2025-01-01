@@ -1,6 +1,6 @@
 /**
- * Weather store module for managing weather data and user preferences.
- * @module stores/weather
+ * App store module for managing weather data and user preferences.
+ * @module stores/app
  */
 
 import { defineStore } from 'pinia'
@@ -8,9 +8,9 @@ import { WeatherService, type WeatherData } from '../services/weather'
 import { ref } from 'vue'
 
 /**
- * Interface representing the weather store state.
+ * Interface representing the app store state.
  */
-interface WeatherState {
+interface AppState {
   currentWeather: WeatherData | null
   favorites: WeatherData[]
   searchHistory: Array<{
@@ -26,9 +26,9 @@ interface WeatherState {
   loading: boolean
 }
 
-const STORAGE_KEY = 'weather-store'
+const STORAGE_KEY = 'app-store'
 
-const loadStateFromStorage = (): Partial<WeatherState> => {
+const loadStateFromStorage = (): Partial<AppState> => {
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored) {
@@ -45,7 +45,7 @@ const loadStateFromStorage = (): Partial<WeatherState> => {
   return {}
 }
 
-export const useWeatherStore = defineStore('weather', () => {
+export const useAppStore = defineStore('app', () => {
   type FavoriteHistoryEntry = {
     action: 'add' | 'remove'
     location: string

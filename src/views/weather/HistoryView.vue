@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useWeatherStore } from '@/stores/weather'
+import { useAppStore } from '@/stores/app'
 import { useAuthStore } from '@/stores/auth'
 
-const weatherStore = useWeatherStore()
+const appStore = useAppStore()
 const authStore = useAuthStore()
 
-const { searchHistory, favoriteHistory } = storeToRefs(weatherStore)
+const { searchHistory, favoriteHistory } = storeToRefs(appStore)
 const { loginHistory } = storeToRefs(authStore)
 
 const allHistory = computed(() => {
