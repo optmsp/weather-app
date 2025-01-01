@@ -32,19 +32,19 @@ const humidityFormatted = computed(() => `${props.weather.humidity}%`)
 </script>
 
 <template>
-  <div class="card bg-base-100 shadow-xl">
-    <div class="card-body">
-      <div class="flex justify-between items-start">
-        <h2 class="card-title">{{ weather.location }}</h2>
-        <button class="btn btn-ghost btn-circle" @click="emit('toggleFavorite', weather.location)">
-          <span class="text-2xl">{{ weather.isFavorite ? '★' : '☆' }}</span>
+  <div class="weather-card">
+    <div class="weather-card-body">
+      <div class="weather-header">
+        <h2 class="location-title">{{ weather.location }}</h2>
+        <button class="favorite-button" @click="emit('toggleFavorite', weather.location)">
+          <span class="favorite-icon">{{ weather.isFavorite ? '★' : '☆' }}</span>
         </button>
       </div>
 
-      <p class="text-4xl font-bold my-4">{{ temperatureFormatted }}</p>
-      <p class="text-lg">{{ weather.description }}</p>
+      <p class="temperature">{{ temperatureFormatted }}</p>
+      <p class="description">{{ weather.description }}</p>
 
-      <div class="grid grid-cols-2 gap-4 mt-4">
+      <div class="stats-grid">
         <div class="stat-box">
           <div class="stat-label">Wind Speed</div>
           <div class="stat-value">{{ windSpeedFormatted }}</div>
@@ -59,6 +59,42 @@ const humidityFormatted = computed(() => `${props.weather.humidity}%`)
 </template>
 
 <style scoped>
+.weather-card {
+  @apply card bg-base-100 shadow-xl;
+}
+
+.weather-card-body {
+  @apply card-body;
+}
+
+.weather-header {
+  @apply flex justify-between items-start;
+}
+
+.location-title {
+  @apply card-title;
+}
+
+.favorite-button {
+  @apply btn btn-ghost btn-circle;
+}
+
+.favorite-icon {
+  @apply text-2xl;
+}
+
+.temperature {
+  @apply text-4xl font-bold my-4;
+}
+
+.description {
+  @apply text-lg;
+}
+
+.stats-grid {
+  @apply grid grid-cols-2 gap-4 mt-4;
+}
+
 .stat-box {
   @apply p-4 bg-base-200 rounded-lg;
 }

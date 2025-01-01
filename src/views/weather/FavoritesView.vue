@@ -29,12 +29,12 @@ const toggleFavorite = () => {
 
 <template>
   <div>
-    <h1 class="text-3xl font-bold mb-8">Weather Dashboard</h1>
+    <h1 class="page-header">Weather Dashboard</h1>
 
     <CitySearch @search="handleSearch" @use-current-location="handleUseCurrentLocation" />
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div v-if="loading" class="text-center py-8">
+    <div class="favorites-grid">
+      <div v-if="loading" class="loading-container">
         <span class="loading loading-spinner loading-lg"></span>
       </div>
 
@@ -50,7 +50,7 @@ const toggleFavorite = () => {
         />
 
         <template v-if="favorites.length > 0">
-          <h2 class="text-2xl font-bold mt-8 mb-4">Favorites</h2>
+          <h2 class="section-header">Favorites</h2>
           <WeatherCard
             v-for="weather in favorites"
             :key="weather.location"
@@ -62,3 +62,21 @@ const toggleFavorite = () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.page-header {
+  @apply text-3xl font-bold mb-8;
+}
+
+.section-header {
+  @apply text-2xl font-bold mt-8 mb-4;
+}
+
+.favorites-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+
+.loading-container {
+  @apply text-center py-8;
+}
+</style>

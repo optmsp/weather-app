@@ -35,15 +35,15 @@ const allHistory = computed(() => {
 
 <template>
   <div>
-    <h1 class="text-3xl font-bold mb-8">Activity History</h1>
+    <h1 class="page-header">Activity History</h1>
 
-    <div class="space-y-4">
-      <div v-for="entry in allHistory" :key="entry.timestamp" class="card bg-base-100 shadow">
-        <div class="card-body">
-          <div class="flex justify-between items-center">
+    <div class="history-list">
+      <div v-for="entry in allHistory" :key="entry.timestamp" class="history-card">
+        <div class="history-card-body">
+          <div class="history-item">
             <div>
               <span
-                class="badge"
+                class="history-badge"
                 :class="{
                   'badge-info': entry.type === 'search',
                   'badge-success': entry.type === 'favorite',
@@ -52,12 +52,46 @@ const allHistory = computed(() => {
               >
                 {{ entry.type }}
               </span>
-              <p class="mt-2">{{ entry.details }}</p>
+              <p class="history-details">{{ entry.details }}</p>
             </div>
-            <time class="text-sm opacity-70">{{ new Date(entry.timestamp).toLocaleString() }}</time>
+            <time class="history-timestamp">{{ new Date(entry.timestamp).toLocaleString() }}</time>
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.page-header {
+  @apply text-3xl font-bold mb-8;
+}
+
+.history-list {
+  @apply space-y-4;
+}
+
+.history-card {
+  @apply card bg-base-100 shadow;
+}
+
+.history-card-body {
+  @apply card-body;
+}
+
+.history-item {
+  @apply flex justify-between items-center;
+}
+
+.history-badge {
+  @apply badge;
+}
+
+.history-details {
+  @apply mt-2;
+}
+
+.history-timestamp {
+  @apply text-sm opacity-70;
+}
+</style>
