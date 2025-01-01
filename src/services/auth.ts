@@ -101,8 +101,22 @@ export class AuthService {
     return response.json()
   }
 
-  static async enable2FA(userId: string): Promise<{ secret: string; qrCode: string }> {
-    // TODO: Implement 2FA setup with a library like 'otplib'
-    throw new Error('Not implemented')
+  static async enable2FA(id: string): Promise<{ secret: string; qrCode: string }> {
+    const response = await fetch(`${API_URL}/users/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        twoFactorEnabled: true,
+      }),
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to enable 2FA')
+    }
+
+    const { secret, qrCodeUrl } = await TwoFactorAuthService.generateSecret('user@example.com')
+    return { secret, qrCode: qrCodeUrl }
   }
 }

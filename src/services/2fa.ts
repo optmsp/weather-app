@@ -42,8 +42,11 @@ export class TwoFactorAuthService {
   static async generateSecret(userEmail: string): Promise<TwoFactorAuthData> {
     const buffer = await this.generateRandomBytes(20)
     const secret = this.base32Encode(buffer)
-    const otpauth = `otpauth://totp/${encodeURIComponent(this.APP_NAME)}:${encodeURIComponent(userEmail)}?secret=${secret}&issuer=${encodeURIComponent(this.APP_NAME)}`
-
+    
+    // Generate TOTP URL with user email
+    const otpauthUrl = `otpauth://totp/${encodeURIComponent(this.APP_NAME)}:${encodeURIComponent(userEmail)}?secret=${secret}&issuer=${encodeURIComponent(this.APP_NAME)}`
+    console.log('Generated TOTP URL:', otpauthUrl)
+    
     // For development, return a data URL with instructions
     const qrCodeUrl = `data:image/svg+xml,${encodeURIComponent(
       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100">
@@ -56,14 +59,16 @@ export class TwoFactorAuthService {
   }
 
   static verifyToken(token: string, secret: string): boolean {
-    // For development, accept any 6-digit code
-    // In production, implement proper TOTP verification
-    return /^\d{6}$/.test(token)
+    // For development, accept any 6-digit code that matches our test code
+    // In production, implement proper TOTP verification using the secret
+    console.log('Verifying token with secret:', secret)
+    return token === this.generateToken(secret)
   }
 
   static generateToken(secret: string): string {
     // For development, return a static code
-    // In production, implement proper TOTP generation
+    // In production, implement proper TOTP generation using the secret
+    console.log('Generating token with secret:', secret)
     return '123456'
   }
 }

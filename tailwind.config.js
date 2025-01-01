@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+/* eslint-disable @typescript-eslint/no-require-imports */
 export default {
   content: [
     "./index.html",
@@ -7,6 +8,7 @@ export default {
   theme: {
     extend: {},
   },
+  // @ts-expect-error: CommonJS module import in build config
   plugins: [require("daisyui")],
 }
 
