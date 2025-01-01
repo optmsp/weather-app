@@ -37,40 +37,40 @@ const router = createRouter({
           path: 'login',
           name: 'login',
           component: () => import('@/views/auth/LoginView.vue'),
-          meta: { requiresAuth: false }
-        },
-        {
-          path: '/auth/login',
-          redirect: '/login'
+          meta: { requiresAuth: false },
         },
         {
           path: 'register',
           name: 'register',
           component: () => import('@/views/auth/RegisterView.vue'),
-          meta: { requiresAuth: false }
+          meta: { requiresAuth: false },
         },
         {
-          path: '/auth/register',
-          redirect: '/register'
+          path: 'auth/login',
+          redirect: '/login',
+        },
+        {
+          path: 'auth/register',
+          redirect: '/register',
         },
       ],
     },
     {
       path: '/:pathMatch(.*)*',
-      redirect: '/login'
-    }
+      redirect: '/login',
+    },
   ],
 })
 
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
-  
+
   console.log('Navigation Guard:', {
     to: to.fullPath,
     from: from.fullPath,
     requiresAuth,
-    isAuthenticated: authStore.isAuthenticated
+    isAuthenticated: authStore.isAuthenticated,
   })
 
   if (requiresAuth && !authStore.isAuthenticated) {

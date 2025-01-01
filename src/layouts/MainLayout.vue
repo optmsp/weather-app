@@ -9,7 +9,6 @@ const isLoggedIn = computed(() => {
   console.log('Auth state:', authStore.isAuthenticated)
   return authStore.isAuthenticated
 })
-// User profile data is managed by the auth store
 
 const handleLogout = () => {
   console.log('Logging out user')
@@ -43,24 +42,21 @@ const handleLogout = () => {
           </template>
           <template v-else>
             <li>
-              <button class="btn btn-ghost" @click="router.push('/login')">Login</button>
+              <router-link to="/login">Login</router-link>
             </li>
             <li>
-              <button class="btn btn-ghost" @click="router.push('/register')">Register</button>
+              <router-link to="/register">Register</router-link>
             </li>
           </template>
         </ul>
       </div>
     </header>
-
-    <main class="flex-grow container mx-auto px-4 py-8">
-      <slot />
+    <main class="flex-grow">
+      <router-view></router-view>
     </main>
-
-    <footer class="footer footer-center p-4 bg-base-300 text-base-content">
-      <div>
-        <p>Copyright © 2024 - All rights reserved</p>
-      </div>
-    </footer>
   </div>
 </template>
+
+<style scoped>
+/* Add your styles here */
+</style>
