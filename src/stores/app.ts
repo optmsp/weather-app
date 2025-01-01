@@ -15,12 +15,6 @@ import {
 } from '../services/appData';
 
 export const useAppStore = defineStore('app', () => {
-  type FavoriteHistoryEntry = {
-    action: 'add' | 'remove';
-    location: string;
-    timestamp: string;
-  };
-
   type SearchHistoryEntry = {
     query: string;
     timestamp: string;
