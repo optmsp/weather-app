@@ -46,7 +46,7 @@ const allHistory = computed(() => {
                 :class="{
                   'badge badge-info': entry.type === 'search',
                   'badge badge-success': entry.type === 'favorite',
-                  'badge badge-warning': entry.type === 'login'
+                  'badge badge-warning': entry.type === 'login',
                 }"
               >
                 {{ entry.type }}
