@@ -83,11 +83,11 @@ const useCurrentLocation = () => {
         >
           <li
             v-for="suggestion in suggestions"
-            :key="\`\${suggestion.latitude}-\${suggestion.longitude}\`"
+            :key="suggestion.latitude + '-' + suggestion.longitude"
             @click="handleSuggestionClick(suggestion)"
             class="px-4 py-2 hover:bg-base-200 cursor-pointer"
           >
-            {{ suggestion.name }}{{ suggestion.admin1 ? \`, \${suggestion.admin1}\` : '' }}, {{ suggestion.country }}
+            {{ suggestion.name }}{{ suggestion.admin1 ? ', ' + suggestion.admin1 : '' }}, {{ suggestion.country }}
           </li>
         </ul>
         <!-- Loading Indicator -->
