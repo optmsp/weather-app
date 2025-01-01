@@ -15,8 +15,9 @@ import type { AuthState, LoginCredentials, RegisterData, UserProfile } from '../
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => {
     const token = localStorage.getItem('token')
+    const persistedUser = localStorage.getItem('user')
     return {
-      user: null,
+      user: persistedUser ? JSON.parse(persistedUser) : null,
       isAuthenticated: !!token,
       token: token,
       twoFactorEnabled: false,
@@ -81,6 +82,7 @@ export const useAuthStore = defineStore('auth', {
         this.user = user
         this.token = token
         this.isAuthenticated = true
+        localStorage.setItem('user', JSON.stringify(user))
         localStorage.setItem('token', token)
 
         // Record login history
@@ -108,6 +110,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         const updatedUser = await AuthService.updateProfile(this.user.id, profile)
         this.user = updatedUser
+        localStorage.setItem('user', JSON.stringify(updatedUser))
         return updatedUser
       } catch (error) {
         console.error('Profile update failed:', error)
