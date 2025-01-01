@@ -26,7 +26,7 @@ interface AppState {
   loading: boolean
 }
 
-const STORAGE_KEY = 'app-store';
+const STORAGE_KEY = 'app-store'
 
 const loadStateFromStorage = (): Partial<AppState> => {
   try {
@@ -42,8 +42,8 @@ const loadStateFromStorage = (): Partial<AppState> => {
   } catch (error) {
     console.error('Failed to load state from localStorage:', error)
   }
-  return {};
-};
+  return {}
+}
 
 export const useAppStore = defineStore('app', () => {
   type FavoriteHistoryEntry = {
@@ -81,7 +81,7 @@ export const useAppStore = defineStore('app', () => {
   }
 
   const isFavorite = (location: string) =>
-    favorites.value.some((fav: WeatherData) => fav.location === location);
+    favorites.value.some((fav: WeatherData) => fav.location === location)
 
   /** Store actions for weather operations */
   /**
