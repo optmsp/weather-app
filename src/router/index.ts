@@ -1,6 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '../stores/auth'
-import MainLayout from '../layouts/MainLayout.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import { useAuthStore } from '../stores/auth';
+import MainLayout from '../layouts/MainLayout.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -60,29 +60,29 @@ const router = createRouter({
       redirect: '/login',
     },
   ],
-})
+});
 
 router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore()
-  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
+  const authStore = useAuthStore();
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
 
   console.log('Navigation Guard:', {
     to: to.fullPath,
     from: from.fullPath,
     requiresAuth,
     isAuthenticated: authStore.isAuthenticated,
-  })
+  });
 
   if (requiresAuth && !authStore.isAuthenticated) {
-    console.log('Redirecting to login: Auth required')
-    next('/login')
+    console.log('Redirecting to login: Auth required');
+    next('/login');
   } else if (!requiresAuth && authStore.isAuthenticated) {
-    console.log('Redirecting to home: Already authenticated')
-    next('/')
+    console.log('Redirecting to home: Already authenticated');
+    next('/');
   } else {
-    console.log('Proceeding with navigation')
-    next()
+    console.log('Proceeding with navigation');
+    next();
   }
-})
+});
 
 export default router;

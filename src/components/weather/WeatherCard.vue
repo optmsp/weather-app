@@ -7,24 +7,24 @@
   @emits {string} toggleFavorite - Emits location string when favorite status is toggled
 -->
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed } from 'vue';
 
 interface WeatherData {
-  temperature: number
-  humidity: number
-  windSpeed: number
-  description: string
-  location: string
-  isFavorite?: boolean
+  temperature: number;
+  humidity: number;
+  windSpeed: number;
+  description: string;
+  location: string;
+  isFavorite?: boolean;
 }
 
 const props = defineProps<{
-  weather: WeatherData
-}>()
+  weather: WeatherData;
+}>();
 
 const emit = defineEmits<{
-  (e: 'toggleFavorite', location: string): void
-}>()
+  (e: 'toggleFavorite', location: string): void;
+}>();
 
 const celsiusToFahrenheit = (celsius: number) => (celsius * 9) / 5 + 32;
 const temperatureFormatted = computed(() => {

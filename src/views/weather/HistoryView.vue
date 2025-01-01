@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useAppStore } from '@/stores/app'
-import { useAuthStore } from '@/stores/auth'
+import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useAppStore } from '@/stores/app';
+import { useAuthStore } from '@/stores/auth';
 
-const appStore = useAppStore()
-const authStore = useAuthStore()
+const appStore = useAppStore();
+const authStore = useAuthStore();
 
-const { searchHistory, favoriteHistory } = storeToRefs(appStore)
-const { loginHistory } = storeToRefs(authStore)
+const { searchHistory, favoriteHistory } = storeToRefs(appStore);
+const { loginHistory } = storeToRefs(authStore);
 
 const allHistory = computed(() => {
   const combined = [
@@ -27,10 +27,10 @@ const allHistory = computed(() => {
       timestamp: entry.timestamp,
       details: entry.details,
     })),
-  ]
+  ];
 
-  return combined.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-})
+  return combined.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+});
 </script>
 
 <template>

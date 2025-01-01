@@ -3,10 +3,10 @@
  * @module stores/auth
  */
 
-import { defineStore } from 'pinia'
-import { AuthService } from '../services/auth'
-import { TwoFactorAuthService } from '../services/2fa'
-import type { AuthState, LoginCredentials, RegisterData, UserProfile } from '../types/user'
+import { defineStore } from 'pinia';
+import { AuthService } from '../services/auth';
+import { TwoFactorAuthService } from '../services/2fa';
+import type { AuthState, LoginCredentials, RegisterData, UserProfile } from '../types/user';
 
 /**
  * Pinia store for managing authentication state and operations.
@@ -14,7 +14,7 @@ import type { AuthState, LoginCredentials, RegisterData, UserProfile } from '../
  */
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
     return {
       user: null,
       isAuthenticated: !!token,
@@ -22,7 +22,7 @@ export const useAuthStore = defineStore('auth', {
       twoFactorEnabled: false,
       twoFactorSecret: null,
       loginHistory: [],
-    }
+    };
   },
 
   getters: {
@@ -40,13 +40,13 @@ export const useAuthStore = defineStore('auth', {
      */
     async register(data: RegisterData) {
       try {
-        const user = await AuthService.register(data)
-        this.user = user
-        this.isAuthenticated = true
-        return user
+        const user = await AuthService.register(data);
+        this.user = user;
+        this.isAuthenticated = true;
+        return user;
       } catch (error) {
-        console.error('Registration failed:', error)
-        throw error
+        console.error('Registration failed:', error);
+        throw error;
       }
     },
 
@@ -58,41 +58,41 @@ export const useAuthStore = defineStore('auth', {
      * @throws {Error} If login fails or 2FA verification fails
      */
     async login(credentials: LoginCredentials) {
-      console.log('Attempting login:', { email: credentials.email })
+      console.log('Attempting login:', { email: credentials.email });
       try {
-        const { user, token } = await AuthService.login(credentials)
-        console.log('Login successful:', { userId: user.id })
+        const { user, token } = await AuthService.login(credentials);
+        console.log('Login successful:', { userId: user.id });
 
         // If 2FA is enabled, verify the token before completing login
         if (this.twoFactorEnabled && !credentials.totpCode) {
-          throw new Error('2FA token required')
+          throw new Error('2FA token required');
         }
 
         if (this.twoFactorEnabled && credentials.totpCode) {
           const isValid = TwoFactorAuthService.verifyToken(
             this.twoFactorSecret!,
             credentials.totpCode,
-          )
+          );
           if (!isValid) {
-            throw new Error('Invalid 2FA token')
+            throw new Error('Invalid 2FA token');
           }
         }
 
-        this.user = user
-        this.token = token
-        this.isAuthenticated = true
-        localStorage.setItem('token', token)
+        this.user = user;
+        this.token = token;
+        this.isAuthenticated = true;
+        localStorage.setItem('token', token);
 
         // Record login history
         this.loginHistory.unshift({
           timestamp: new Date().toISOString(),
           details: `Logged in as ${user.email}`,
-        })
+        });
 
-        return user
+        return user;
       } catch (error) {
-        console.error('Login failed:', error)
-        throw error
+        console.error('Login failed:', error);
+        throw error;
       }
     },
 
@@ -103,15 +103,15 @@ export const useAuthStore = defineStore('auth', {
      * @throws {Error} If user is not authenticated or update fails
      */
     async updateProfile(profile: UserProfile) {
-      if (!this.user?.id) throw new Error('User not authenticated')
+      if (!this.user?.id) throw new Error('User not authenticated');
 
       try {
-        const updatedUser = await AuthService.updateProfile(this.user.id, profile)
-        this.user = updatedUser
-        return updatedUser
+        const updatedUser = await AuthService.updateProfile(this.user.id, profile);
+        this.user = updatedUser;
+        return updatedUser;
       } catch (error) {
-        console.error('Profile update failed:', error)
-        throw error
+        console.error('Profile update failed:', error);
+        throw error;
       }
     },
 
@@ -121,14 +121,14 @@ export const useAuthStore = defineStore('auth', {
      * @throws {Error} If user is not authenticated or 2FA setup fails
      */
     async enable2FA() {
-      if (!this.user?.id) throw new Error('User not authenticated')
+      if (!this.user?.id) throw new Error('User not authenticated');
 
       try {
-        const { secret, qrCode } = await AuthService.enable2FA(this.user.id)
-        return { secret, qrCode }
+        const { secret, qrCode } = await AuthService.enable2FA(this.user.id);
+        return { secret, qrCode };
       } catch (error) {
-        console.error('2FA setup failed:', error)
-        throw error
+        console.error('2FA setup failed:', error);
+        throw error;
       }
     },
 
@@ -137,10 +137,10 @@ export const useAuthStore = defineStore('auth', {
      * Removes the authentication token from local storage.
      */
     logout() {
-      this.user = null
-      this.token = null
-      this.isAuthenticated = false
-      localStorage.removeItem('token')
+      this.user = null;
+      this.token = null;
+      this.isAuthenticated = false;
+      localStorage.removeItem('token');
     },
   },
-})
+});
