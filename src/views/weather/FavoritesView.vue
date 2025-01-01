@@ -1,30 +1,30 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { storeToRefs } from 'pinia'
-import CitySearch from '@/components/weather/CitySearch.vue'
-import WeatherCard from '@/components/weather/WeatherCard.vue'
-import { useAppStore } from '@/stores/app'
+import { onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
+import CitySearch from '@/components/weather/CitySearch.vue';
+import WeatherCard from '@/components/weather/WeatherCard.vue';
+import { useAppStore } from '@/stores/app';
 
-const appStore = useAppStore()
-const { currentWeather, favorites, loading, error } = storeToRefs(appStore)
+const appStore = useAppStore();
+const { currentWeather, favorites, loading, error } = storeToRefs(appStore);
 
 onMounted(async () => {
-  await appStore.refreshFavorites()
-})
+  await appStore.refreshFavorites();
+});
 
 const handleSearch = async (query: string) => {
-  await appStore.searchLocation(query)
-}
+  await appStore.searchLocation(query);
+};
 
 const handleUseCurrentLocation = async () => {
-  await appStore.getCurrentLocationWeather()
-}
+  await appStore.getCurrentLocationWeather();
+};
 
 const toggleFavorite = () => {
   if (currentWeather.value) {
-    appStore.toggleFavorite(currentWeather.value)
+    appStore.toggleFavorite(currentWeather.value);
   }
-}
+};
 </script>
 
 <template>

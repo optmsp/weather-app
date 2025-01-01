@@ -1,72 +1,72 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useAuthStore } from '@/stores/auth'
-import type { UserProfile } from '@/types/user'
-import { validateEmail, validateName } from '@/utils/validation'
+import { ref, onMounted } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+import type { UserProfile } from '@/types/user';
+import { validateEmail, validateName } from '@/utils/validation';
 
-const authStore = useAuthStore()
-const name = ref('')
-const email = ref('')
-const error = ref('')
-const success = ref('')
-const loading = ref(false)
-const showTwoFactorSetup = ref(false)
-const twoFactorQRCode = ref('')
-const twoFactorSecret = ref('')
+const authStore = useAuthStore();
+const name = ref('');
+const email = ref('');
+const error = ref('');
+const success = ref('');
+const loading = ref(false);
+const showTwoFactorSetup = ref(false);
+const twoFactorQRCode = ref('');
+const twoFactorSecret = ref('');
 
 onMounted(() => {
   if (authStore.currentUser) {
-    name.value = authStore.currentUser.name
-    email.value = authStore.currentUser.email
+    name.value = authStore.currentUser.name;
+    email.value = authStore.currentUser.email;
   }
-})
+});
 
 const validateForm = (): boolean => {
   if (!validateName(name.value)) {
-    error.value = 'Name must be between 2 and 50 characters'
-    return false
+    error.value = 'Name must be between 2 and 50 characters';
+    return false;
   }
   if (!validateEmail(email.value)) {
-    error.value = 'Please enter a valid email address'
-    return false
+    error.value = 'Please enter a valid email address';
+    return false;
   }
-  return true
-}
+  return true;
+};
 
 const handleSubmit = async () => {
-  error.value = ''
-  success.value = ''
-  if (!validateForm()) return
+  error.value = '';
+  success.value = '';
+  if (!validateForm()) return;
 
-  loading.value = true
+  loading.value = true;
   try {
     const profileData: UserProfile = {
       name: name.value,
       email: email.value,
-    }
-    await authStore.updateProfile(profileData)
-    success.value = 'Profile updated successfully'
+    };
+    await authStore.updateProfile(profileData);
+    success.value = 'Profile updated successfully';
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Failed to update profile'
+    error.value = e instanceof Error ? e.message : 'Failed to update profile';
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 const setupTwoFactor = async () => {
-  error.value = ''
-  loading.value = true
+  error.value = '';
+  loading.value = true;
   try {
-    const { secret, qrCode } = await authStore.enable2FA()
-    twoFactorSecret.value = secret
-    twoFactorQRCode.value = qrCode
-    showTwoFactorSetup.value = true
+    const { secret, qrCode } = await authStore.enable2FA();
+    twoFactorSecret.value = secret;
+    twoFactorQRCode.value = qrCode;
+    showTwoFactorSetup.value = true;
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Failed to setup 2FA'
+    error.value = e instanceof Error ? e.message : 'Failed to setup 2FA';
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 </script>
 
 <template>

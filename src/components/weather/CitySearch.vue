@@ -7,13 +7,13 @@
   @emits {void} useCurrentLocation - Emits when user requests to use their current location
 -->
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useGeolocation } from '@vueuse/core'
+import { ref } from 'vue';
+import { useGeolocation } from '@vueuse/core';
 
 const emit = defineEmits<{
-  (e: 'search', query: string): void
-  (e: 'useCurrentLocation'): void
-}>()
+  (e: 'search', query: string): void;
+  (e: 'useCurrentLocation'): void;
+}>();
 
 const searchQuery = ref('')
 const { coords, isSupported } = useGeolocation()
