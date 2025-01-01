@@ -26,7 +26,7 @@ const emit = defineEmits<{
   (e: 'toggleFavorite', location: string): void
 }>()
 
-const celsiusToFahrenheit = (celsius: number) => Math.round(celsius * 9/5 + 32)
+const celsiusToFahrenheit = (celsius: number) => Math.round((celsius * 9) / 5 + 32)
 const temperatureFormatted = computed(() => {
   const celsius = Math.round(props.weather.temperature)
   const fahrenheit = celsiusToFahrenheit(props.weather.temperature)
