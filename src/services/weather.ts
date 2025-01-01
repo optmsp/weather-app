@@ -21,6 +21,7 @@ interface GeocodingResponse {
 }
 
 export interface WeatherData {
+  id?: string;
   temperature: number;
   humidity: number;
   windSpeed: number;
