@@ -8,59 +8,59 @@
   @emits {void} requires2fa - Emits when 2FA verification is required
 -->
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useAuthStore } from '@/stores/auth'
-import { useRouter } from 'vue-router'
-import type { LoginCredentials } from '@/types/user'
-import { validateEmail, validateTOTP } from '@/utils/validation'
+import { ref } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
+import type { LoginCredentials } from '@/types/user';
+import { validateEmail, validateTOTP } from '@/utils/validation';
 
-const router = useRouter()
+const router = useRouter();
 
-const authStore = useAuthStore()
-const email = ref('')
-const password = ref('')
-const totpCode = ref('')
-const error = ref('')
-const loading = ref(false)
-const requires2FA = ref(false)
+const authStore = useAuthStore();
+const email = ref('');
+const password = ref('');
+const totpCode = ref('');
+const error = ref('');
+const loading = ref(false);
+const requires2FA = ref(false);
 
 const validateForm = (): boolean => {
   if (!validateEmail(email.value)) {
-    error.value = 'Please enter a valid email address'
-    return false
+    error.value = 'Please enter a valid email address';
+    return false;
   }
   if (requires2FA.value && !validateTOTP(totpCode.value)) {
-    error.value = 'Please enter a valid 2FA code'
-    return false
+    error.value = 'Please enter a valid 2FA code';
+    return false;
   }
-  return true
-}
+  return true;
+};
 
 const handleSubmit = async () => {
-  error.value = ''
-  if (!validateForm()) return
+  error.value = '';
+  if (!validateForm()) return;
 
-  loading.value = true
+  loading.value = true;
   try {
     const credentials: LoginCredentials = {
       email: email.value,
       password: password.value,
       ...(requires2FA.value && { totpCode: totpCode.value }),
-    }
-    await authStore.login(credentials)
-    router.push('/favorites')
+    };
+    await authStore.login(credentials);
+    router.push('/favorites');
   } catch (e) {
-    const err = e as Error
+    const err = e as Error;
     if (err.message === '2FA code required') {
-      requires2FA.value = true
-      error.value = 'Please enter your 2FA code'
+      requires2FA.value = true;
+      error.value = 'Please enter your 2FA code';
     } else {
-      error.value = err.message || 'Login failed'
+      error.value = err.message || 'Login failed';
     }
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 </script>
 
 <template>
