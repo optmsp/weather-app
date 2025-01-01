@@ -62,9 +62,7 @@ const handleSubmit = async () => {
 <template>
   <div class="register-container">
     <div class="register-header-container">
-      <h2 class="register-title">
-        Create your account
-      </h2>
+      <h2 class="register-title">Create your account</h2>
     </div>
 
     <div class="register-form-container">
@@ -72,39 +70,21 @@ const handleSubmit = async () => {
         <div>
           <label for="name" class="form-label">Name</label>
           <div class="input-container">
-            <input
-              id="name"
-              v-model="name"
-              type="text"
-              required
-              class="form-input"
-            />
+            <input id="name" v-model="name" type="text" required class="form-input" />
           </div>
         </div>
 
         <div>
           <label for="email" class="form-label">Email address</label>
           <div class="input-container">
-            <input
-              id="email"
-              v-model="email"
-              type="email"
-              required
-              class="form-input"
-            />
+            <input id="email" v-model="email" type="email" required class="form-input" />
           </div>
         </div>
 
         <div>
           <label for="password" class="form-label">Password</label>
           <div class="input-container">
-            <input
-              id="password"
-              v-model="password"
-              type="password"
-              required
-              class="form-input"
-            />
+            <input id="password" v-model="password" type="password" required class="form-input" />
           </div>
         </div>
 

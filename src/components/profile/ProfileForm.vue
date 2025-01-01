@@ -77,26 +77,14 @@ const setupTwoFactor = async () => {
       <div>
         <label for="name" class="form-label">Name</label>
         <div class="input-container">
-          <input
-            id="name"
-            v-model="name"
-            type="text"
-            required
-            class="form-input"
-          />
+          <input id="name" v-model="name" type="text" required class="form-input" />
         </div>
       </div>
 
       <div>
         <label for="email" class="form-label">Email</label>
         <div class="input-container">
-          <input
-            id="email"
-            v-model="email"
-            type="email"
-            required
-            class="form-input"
-          />
+          <input id="email" v-model="email" type="email" required class="form-input" />
         </div>
       </div>
 

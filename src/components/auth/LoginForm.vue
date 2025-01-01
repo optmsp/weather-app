@@ -66,9 +66,7 @@ const handleSubmit = async () => {
 <template>
   <div class="login-container">
     <div class="login-header-container">
-      <h2 class="login-title">
-        Sign in to your account
-      </h2>
+      <h2 class="login-title">Sign in to your account</h2>
     </div>
 
     <div class="login-form-container">
@@ -76,26 +74,14 @@ const handleSubmit = async () => {
         <div>
           <label for="email" class="form-label">Email address</label>
           <div class="input-container">
-            <input
-              id="email"
-              v-model="email"
-              type="email"
-              required
-              class="form-input"
-            />
+            <input id="email" v-model="email" type="email" required class="form-input" />
           </div>
         </div>
 
         <div>
           <label for="password" class="form-label">Password</label>
           <div class="input-container">
-            <input
-              id="password"
-              v-model="password"
-              type="password"
-              required
-              class="form-input"
-            />
+            <input id="password" v-model="password" type="password" required class="form-input" />
           </div>
         </div>
 
