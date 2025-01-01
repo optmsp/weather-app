@@ -17,6 +17,16 @@
       "username": "newuser",
       "email": "new@example.com",
       "password": "NewPass123!"
+    },
+    {
+      "id": "be19",
+      "email": "test@example.com",
+      "password": "Test123!"
+    },
+    {
+      "id": "7fa4",
+      "email": "test@example.com",
+      "password": "Test123!"
     }
   ],
   "sessions": [

@@ -12,7 +12,9 @@ const isLoggedIn = computed(() => {
 const currentUser = computed(() => authStore.currentUser)
 
 const handleLogout = () => {
+  console.log('Logging out user')
   authStore.logout()
+  console.log('Navigation to login page')
   router.push('/login')
 }
 </script>

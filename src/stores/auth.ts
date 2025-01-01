@@ -58,8 +58,10 @@ export const useAuthStore = defineStore('auth', {
      * @throws {Error} If login fails or 2FA verification fails
      */
     async login(credentials: LoginCredentials) {
+      console.log('Attempting login:', { email: credentials.email })
       try {
         const { user, token } = await AuthService.login(credentials)
+        console.log('Login successful:', { userId: user.id })
 
         // If 2FA is enabled, verify the token before completing login
         if (this.twoFactorEnabled && !credentials.totpCode) {

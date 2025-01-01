@@ -36,7 +36,7 @@ const router = createRouter({
         {
           path: 'login',
           name: 'login',
-          component: () => import('../components/auth/LoginForm.vue'),
+          component: () => import('@/views/auth/LoginView.vue'),
           meta: { requiresAuth: false }
         },
         {
@@ -46,7 +46,7 @@ const router = createRouter({
         {
           path: 'register',
           name: 'register',
-          component: () => import('../components/auth/RegisterForm.vue'),
+          component: () => import('@/views/auth/RegisterView.vue'),
           meta: { requiresAuth: false }
         },
         {
@@ -65,12 +65,22 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
+  
+  console.log('Navigation Guard:', {
+    to: to.fullPath,
+    from: from.fullPath,
+    requiresAuth,
+    isAuthenticated: authStore.isAuthenticated
+  })
 
   if (requiresAuth && !authStore.isAuthenticated) {
+    console.log('Redirecting to login: Auth required')
     next('/login')
   } else if (!requiresAuth && authStore.isAuthenticated) {
+    console.log('Redirecting to home: Already authenticated')
     next('/')
   } else {
+    console.log('Proceeding with navigation')
     next()
   }
 })
