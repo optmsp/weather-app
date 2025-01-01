@@ -5,6 +5,7 @@
 
 import { defineStore } from 'pinia'
 import { WeatherService, type WeatherData } from '../services/weather'
+import { ref } from 'vue'
 
 /**
  * Interface representing the weather store state.
@@ -25,117 +26,174 @@ interface WeatherState {
   loading: boolean
 }
 
-export const useWeatherStore = defineStore('weather', {
-  state: (): WeatherState => ({
-    currentWeather: null,
-    favorites: [],
-    searchHistory: [],
-    favoriteHistory: [],
-    error: null,
-    loading: false,
-  }),
+const STORAGE_KEY = 'weather-store'
 
-  getters: {
-    isFavorite: (state) => (location: string) =>
-      state.favorites.some((fav) => fav.location === location),
-  },
+const loadStateFromStorage = (): Partial<WeatherState> => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY)
+    if (stored) {
+      const data = JSON.parse(stored)
+      return {
+        favorites: data.favorites || [],
+        searchHistory: data.searchHistory || [],
+        favoriteHistory: data.favoriteHistory || [],
+      }
+    }
+  } catch (error) {
+    console.error('Failed to load state from localStorage:', error)
+  }
+  return {}
+}
+
+export const useWeatherStore = defineStore('weather', () => {
+  type FavoriteHistoryEntry = {
+    action: 'add' | 'remove'
+    location: string
+    timestamp: string
+  }
+
+  type SearchHistoryEntry = {
+    query: string
+    timestamp: string
+  }
+  const stored = loadStateFromStorage()
+  
+  const currentWeather = ref<WeatherData | null>(null)
+  const favorites = ref<WeatherData[]>(stored.favorites || [])
+  const searchHistory = ref<SearchHistoryEntry[]>(stored.searchHistory || [])
+  const favoriteHistory = ref<FavoriteHistoryEntry[]>(stored.favoriteHistory || [])
+  const error = ref<string | null>(null)
+  const loading = ref(false)
+
+  const saveToStorage = () => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        favorites: favorites.value,
+        searchHistory: searchHistory.value,
+        favoriteHistory: favoriteHistory.value,
+      }))
+    } catch (error) {
+      console.error('Failed to save state to localStorage:', error)
+    }
+  }
+
+  const isFavorite = (location: string) => 
+    favorites.value.some((fav: WeatherData) => fav.location === location)
 
   /** Store actions for weather operations */
-  actions: {
     /**
      * Searches for weather data by location name.
      * Updates search history on successful search.
      * @param {string} query - Location name to search for
      * @throws {Error} If location search fails
      */
-    async searchLocation(query: string) {
-      this.loading = true
-      this.error = null
+    const searchLocation = async (query: string) => {
+      loading.value = true
+      error.value = null
 
       try {
         const weather = await WeatherService.searchLocation(query)
 
         if (weather) {
-          this.currentWeather = weather
-          this.searchHistory.unshift({
+          currentWeather.value = weather
+          searchHistory.value.unshift({
             query,
             timestamp: new Date().toISOString(),
           })
+          // Save to localStorage after updating search history
+          saveToStorage()
         } else {
-          this.error = 'Location not found'
+          error.value = 'Location not found'
         }
-      } catch (error) {
-        this.error = error instanceof Error ? error.message : 'Failed to search location'
+      } catch (err) {
+        error.value = err instanceof Error ? err.message : 'Failed to search location'
       } finally {
-        this.loading = false
+        loading.value = false
       }
-    },
+    }
 
     /**
      * Gets weather data for the user's current location.
      * Uses browser geolocation API.
      * @throws {Error} If geolocation fails or weather data fetch fails
      */
-    async getCurrentLocationWeather() {
-      this.loading = true
-      this.error = null
+    const getCurrentLocationWeather = async () => {
+      loading.value = true
+      error.value = null
 
       try {
         const weather = await WeatherService.getCurrentLocationWeather()
 
         if (weather) {
-          this.currentWeather = weather
+          currentWeather.value = weather
         } else {
-          this.error = 'Failed to get weather for current location'
+          error.value = 'Failed to get weather for current location'
         }
-      } catch (error) {
-        this.error = error instanceof Error ? error.message : 'Failed to get current location'
+      } catch (err) {
+        error.value = err instanceof Error ? err.message : 'Failed to get current location'
       } finally {
-        this.loading = false
+        loading.value = false
       }
-    },
+    }
 
     /**
      * Toggles a location's favorite status.
      * Records the action in favorite history.
      * @param {WeatherData} weather - Weather data for the location to toggle
      */
-    toggleFavorite(weather: WeatherData) {
-      const index = this.favorites.findIndex((fav) => fav.location === weather.location)
+    const toggleFavorite = (weather: WeatherData) => {
+      const index = favorites.value.findIndex((fav: WeatherData) => fav.location === weather.location)
 
       if (index === -1) {
-        this.favorites.push(weather)
-        this.favoriteHistory.unshift({
+        favorites.value.push(weather)
+        favoriteHistory.value.unshift({
           action: 'add',
           location: weather.location,
           timestamp: new Date().toISOString(),
         })
       } else {
-        this.favorites.splice(index, 1)
-        this.favoriteHistory.unshift({
+        favorites.value.splice(index, 1)
+        favoriteHistory.value.unshift({
           action: 'remove',
           location: weather.location,
           timestamp: new Date().toISOString(),
         })
       }
-    },
+      
+      // Save to localStorage
+      saveToStorage()
+    }
 
     /**
      * Refreshes weather data for all favorite locations.
      * Removes any locations that can no longer be found.
      * @returns {Promise<void>}
      */
-    async refreshFavorites() {
+    const refreshFavorites = async () => {
       const updatedFavorites = await Promise.all(
-        this.favorites.map(async (favorite) => {
+        favorites.value.map(async (favorite: WeatherData) => {
           const weather = await WeatherService.searchLocation(favorite.location)
           return weather || favorite
         }),
       )
 
-      this.favorites = updatedFavorites.filter(
-        (weather): weather is WeatherData => weather !== null,
+      favorites.value = updatedFavorites.filter(
+        (weather: WeatherData | null): weather is WeatherData => weather !== null,
       )
-    },
-  },
+      saveToStorage()
+    }
+
+    return {
+      currentWeather,
+      favorites,
+      searchHistory,
+      favoriteHistory,
+      error,
+      loading,
+      isFavorite,
+      searchLocation,
+      getCurrentLocationWeather,
+      toggleFavorite,
+      refreshFavorites,
+    }
 })
