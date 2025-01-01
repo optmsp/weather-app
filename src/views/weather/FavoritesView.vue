@@ -3,26 +3,26 @@ import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import CitySearch from '@/components/weather/CitySearch.vue'
 import WeatherCard from '@/components/weather/WeatherCard.vue'
-import { useWeatherStore } from '@/stores/weather'
+import { useAppStore } from '@/stores/app'
 
-const weatherStore = useWeatherStore()
-const { currentWeather, favorites, loading, error } = storeToRefs(weatherStore)
+const appStore = useAppStore()
+const { currentWeather, favorites, loading, error } = storeToRefs(appStore)
 
 onMounted(async () => {
-  await weatherStore.refreshFavorites()
+  await appStore.refreshFavorites()
 })
 
 const handleSearch = async (query: string) => {
-  await weatherStore.searchLocation(query)
+  await appStore.searchLocation(query)
 }
 
 const handleUseCurrentLocation = async () => {
-  await weatherStore.getCurrentLocationWeather()
+  await appStore.getCurrentLocationWeather()
 }
 
 const toggleFavorite = () => {
   if (currentWeather.value) {
-    weatherStore.toggleFavorite(currentWeather.value)
+    appStore.toggleFavorite(currentWeather.value)
   }
 }
 </script>
@@ -55,7 +55,7 @@ const toggleFavorite = () => {
             v-for="weather in favorites"
             :key="weather.location"
             :weather="weather"
-            @toggle-favorite="() => weatherStore.toggleFavorite(weather)"
+            @toggle-favorite="() => appStore.toggleFavorite(weather)"
           />
         </template>
       </template>
