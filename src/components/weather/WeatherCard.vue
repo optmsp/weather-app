@@ -2,7 +2,7 @@
   @component WeatherCard
   @description Displays detailed weather information for a location.
   Shows temperature, humidity, wind speed, and allows favoriting.
-  
+
   @prop {WeatherData} weather - Weather data to display
   @emits {string} toggleFavorite - Emits location string when favorite status is toggled
 -->
@@ -26,11 +26,11 @@ const emit = defineEmits<{
   (e: 'toggleFavorite', location: string): void
 }>()
 
-const celsiusToFahrenheit = (celsius: number) => Math.round(celsius * 9/5 + 32)
+const celsiusToFahrenheit = (celsius: number) => (celsius * 9) / 5 + 32
 const temperatureFormatted = computed(() => {
-  const celsius = Math.round(props.weather.temperature)
-  const fahrenheit = celsiusToFahrenheit(props.weather.temperature)
-  return `${celsius}°C/${fahrenheit}°F`
+  const celsius = props.weather.temperature.toFixed(1)
+  const fahrenheit = celsiusToFahrenheit(props.weather.temperature).toFixed(1)
+  return `${celsius}°C / ${fahrenheit}°F`
 })
 const windSpeedFormatted = computed(() => `${props.weather.windSpeed} km/h`)
 const humidityFormatted = computed(() => `${props.weather.humidity}%`)
