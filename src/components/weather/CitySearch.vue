@@ -2,7 +2,7 @@
   @component CitySearch
   @description Search component for finding cities and getting their weather.
   Supports both city name search and current location detection using browser geolocation.
-  
+
   @emits {string} search - Emits the search query when form is submitted
   @emits {void} useCurrentLocation - Emits when user requests to use their current location
 -->
@@ -33,7 +33,7 @@ const useCurrentLocation = () => {
 </script>
 
 <template>
-  <div class="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto mb-8">
+  <div class="city-search-bar">
     <form @submit.prevent="handleSubmit" class="flex-grow flex gap-2">
       <input
         v-model="searchQuery"
@@ -54,3 +54,11 @@ const useCurrentLocation = () => {
     </button>
   </div>
 </template>
+
+<!-- place the search bar at the top-right in the content area -->
+<style>
+.city-search-bar {
+  @apply flex gap-4 justify-end;
+  margin-bottom: 1rem;
+}
+</style>
