@@ -4,7 +4,7 @@
       "id": "eca5",
       "username": "testuser",
       "email": "test@example.com",
-      "password": "Test123!",
+      "password": "Test123abc",
       "twoFactorEnabled": true,
       "twoFactorSecret": "JBSWY3DPEHPK3PXP",
       "profile": {
@@ -16,29 +16,37 @@
       "id": "e5c3",
       "username": "newuser",
       "email": "new@example.com",
-      "password": "NewPass123!"
+      "password": "NewPass123abc"
     },
     {
       "id": "be19",
       "email": "test@example.com",
-      "password": "Test123!"
+      "password": "Test123abc"
     },
     {
       "id": "7fa4",
       "email": "test@example.com",
-      "password": "Test123!"
+      "password": "Test123abc"
+    },
+    {
+      "id": "1023",
+      "name": "test user",
+      "email": "demo@example.com",
+      "password": "a100b8c164989b5253621d976cec989ebbc6dc7d04a8066464debd659b6c5587",
+      "twoFactorEnabled": false,
+      "createdAt": "2025-01-01T03:49:29.855Z"
     }
   ],
   "sessions": [
     {
       "id": "a956",
       "email": "test@example.com",
-      "password": "Test123!"
+      "password": "Test123abc"
     },
     {
       "id": "0c47",
       "email": "test@example.com",
-      "password": "Test123!"
+      "password": "Test123abc"
     }
   ],
   "favorites": [
