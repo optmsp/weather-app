@@ -10,7 +10,7 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
-    "format": "prettier --write \"src/**/*\" \"*.md\"",
+    "format": "prettier --write \"src/**/*.{vue,js,ts,json,css}\" \"*.md\"",
     "mock-api": "json-server --watch db.json --port 3000",
     "ci": "npm run type-check && npm run build",
     "prepare": "npm run format"
