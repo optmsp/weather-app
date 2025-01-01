@@ -26,14 +26,14 @@ const emit = defineEmits<{
   (e: 'toggleFavorite', location: string): void;
 }>();
 
-const celsiusToFahrenheit = (celsius: number) => (celsius * 9) / 5 + 32;
+const celsiusToFahrenheit = (celsius: number) => (celsius * 9) / 5 + 32
 const temperatureFormatted = computed(() => {
-  const celsius = props.weather.temperature.toFixed(1);
-  const fahrenheit = celsiusToFahrenheit(props.weather.temperature).toFixed(1);
-  return `${celsius}°C / ${fahrenheit}°F`;
-});
-const windSpeedFormatted = computed(() => `${props.weather.windSpeed} km/h`);
-const humidityFormatted = computed(() => `${props.weather.humidity}%`);
+  const celsius = props.weather.temperature.toFixed(1)
+  const fahrenheit = celsiusToFahrenheit(props.weather.temperature).toFixed(1)
+  return `${celsius}°C / ${fahrenheit}°F`
+})
+const windSpeedFormatted = computed(() => `${props.weather.windSpeed} km/h`)
+const humidityFormatted = computed(() => `${props.weather.humidity}%`)
 </script>
 
 <template>

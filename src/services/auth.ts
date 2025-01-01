@@ -1,25 +1,25 @@
-import type { LoginCredentials, RegisterData, User, UserProfile } from '@/types/user';
-import { TwoFactorAuthService } from './2fa';
+import type { LoginCredentials, RegisterData, User, UserProfile } from '@/types/user'
+import { TwoFactorAuthService } from './2fa'
 
-const API_URL = 'http://localhost:3000'; // json-server URL
+const API_URL = 'http://localhost:3000' // json-server URL
 
 // Browser-safe password hashing using Web Crypto API
 async function hashPassword(password: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  const hash = await crypto.subtle.digest('SHA-256', data);
+  const encoder = new TextEncoder()
+  const data = encoder.encode(password)
+  const hash = await crypto.subtle.digest('SHA-256', data)
   return Array.from(new Uint8Array(hash))
     .map((b) => b.toString(16).padStart(2, '0'))
-    .join('');
+    .join('')
 }
 
 // Simple JWT implementation for development
 function generateToken(payload: object): string {
-  const header = { alg: 'HS256', typ: 'JWT' };
-  const encodedHeader = btoa(JSON.stringify(header));
-  const encodedPayload = btoa(JSON.stringify(payload));
-  const signature = btoa('development-signature'); // In production, use proper signing
-  return `${encodedHeader}.${encodedPayload}.${signature}`;
+  const header = { alg: 'HS256', typ: 'JWT' }
+  const encodedHeader = btoa(JSON.stringify(header))
+  const encodedPayload = btoa(JSON.stringify(payload))
+  const signature = btoa('development-signature') // In production, use proper signing
+  return `${encodedHeader}.${encodedPayload}.${signature}`
 }
 
 /**
@@ -28,7 +28,7 @@ function generateToken(payload: object): string {
  */
 export class AuthService {
   static async register(data: RegisterData): Promise<User> {
-    const hashedPassword = await hashPassword(data.password);
+    const hashedPassword = await hashPassword(data.password)
 
     const response = await fetch(`${API_URL}/users`, {
       method: 'POST',
@@ -41,48 +41,48 @@ export class AuthService {
         twoFactorEnabled: false,
         createdAt: new Date().toISOString(),
       }),
-    });
+    })
 
     if (!response.ok) {
-      throw new Error('Registration failed');
+      throw new Error('Registration failed')
     }
 
-    const user = await response.json();
-    delete user.password;
-    return user;
+    const user = await response.json()
+    delete user.password
+    return user
   }
 
   static async login(credentials: LoginCredentials): Promise<{ user: User; token: string }> {
-    const response = await fetch(`${API_URL}/users?email=${credentials.email}`);
-    const users = await response.json();
-    const user = users[0];
+    const response = await fetch(`${API_URL}/users?email=${credentials.email}`)
+    const users = await response.json()
+    const user = users[0]
 
     if (!user) {
-      throw new Error('Invalid credentials');
+      throw new Error('Invalid credentials')
     }
 
-    const hashedInput = await hashPassword(credentials.password);
+    const hashedInput = await hashPassword(credentials.password)
     if (hashedInput !== user.password) {
-      throw new Error('Invalid credentials');
+      throw new Error('Invalid credentials')
     }
 
     if (user.twoFactorEnabled) {
       if (!credentials.totpCode) {
-        throw new Error('2FA code required');
+        throw new Error('2FA code required')
       }
       const isValidCode = TwoFactorAuthService.verifyToken(
         user.twoFactorSecret!,
         credentials.totpCode,
-      );
+      )
       if (!isValidCode) {
-        throw new Error('Invalid 2FA code');
+        throw new Error('Invalid 2FA code')
       }
     }
 
-    const token = generateToken({ userId: user.id, exp: Date.now() + 24 * 60 * 60 * 1000 });
-    delete user.password;
+    const token = generateToken({ userId: user.id, exp: Date.now() + 24 * 60 * 60 * 1000 })
+    delete user.password
 
-    return { user, token };
+    return { user, token }
   }
 
   static async updateProfile(userId: string, profile: UserProfile): Promise<User> {
@@ -92,13 +92,13 @@ export class AuthService {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(profile),
-    });
+    })
 
     if (!response.ok) {
-      throw new Error('Failed to update profile');
+      throw new Error('Failed to update profile')
     }
 
-    return response.json();
+    return response.json()
   }
 
   static async enable2FA(id: string): Promise<{ secret: string; qrCode: string }> {
@@ -110,13 +110,13 @@ export class AuthService {
       body: JSON.stringify({
         twoFactorEnabled: true,
       }),
-    });
+    })
 
     if (!response.ok) {
-      throw new Error('Failed to enable 2FA');
+      throw new Error('Failed to enable 2FA')
     }
 
-    const { secret, qrCodeUrl } = await TwoFactorAuthService.generateSecret('user@example.com');
-    return { secret, qrCode: qrCodeUrl };
+    const { secret, qrCodeUrl } = await TwoFactorAuthService.generateSecret('user@example.com')
+    return { secret, qrCode: qrCodeUrl }
   }
 }

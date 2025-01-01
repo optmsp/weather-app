@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { useAuthStore } from '@/stores/auth';
-import { computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth'
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 
-const authStore = useAuthStore();
-const router = useRouter();
+const authStore = useAuthStore()
+const router = useRouter()
 const isLoggedIn = computed(() => {
-  console.log('Auth state:', authStore.isAuthenticated);
-  return authStore.isAuthenticated;
-});
+  console.log('Auth state:', authStore.isAuthenticated)
+  return authStore.isAuthenticated
+})
 
 const handleLogout = () => {
-  console.log('Logging out user');
-  authStore.logout();
-  console.log('Navigation to login page');
-  router.push('/login');
-};
+  console.log('Logging out user')
+  authStore.logout()
+  console.log('Navigation to login page')
+  router.push('/login')
+}
 </script>
 
 <template>
