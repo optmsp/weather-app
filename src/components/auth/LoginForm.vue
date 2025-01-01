@@ -64,44 +64,44 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight">
+  <div class="login-container">
+    <div class="login-header-container">
+      <h2 class="login-title">
         Sign in to your account
       </h2>
     </div>
 
-    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form class="space-y-6" @submit.prevent="handleSubmit">
+    <div class="login-form-container">
+      <form class="login-form" @submit.prevent="handleSubmit">
         <div>
-          <label for="email" class="block text-sm font-medium leading-6">Email address</label>
-          <div class="mt-2">
+          <label for="email" class="form-label">Email address</label>
+          <div class="input-container">
             <input
               id="email"
               v-model="email"
               type="email"
               required
-              class="input input-bordered w-full"
+              class="form-input"
             />
           </div>
         </div>
 
         <div>
-          <label for="password" class="block text-sm font-medium leading-6">Password</label>
-          <div class="mt-2">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-container">
             <input
               id="password"
               v-model="password"
               type="password"
               required
-              class="input input-bordered w-full"
+              class="form-input"
             />
           </div>
         </div>
 
         <div v-if="requires2FA">
-          <label for="totp" class="block text-sm font-medium leading-6">2FA Code</label>
-          <div class="mt-2">
+          <label for="totp" class="form-label">2FA Code</label>
+          <div class="input-container">
             <input
               id="totp"
               v-model="totpCode"
@@ -109,17 +109,17 @@ const handleSubmit = async () => {
               inputmode="numeric"
               pattern="[0-9]*"
               maxlength="6"
-              class="input input-bordered w-full"
+              class="form-input"
             />
           </div>
         </div>
 
-        <div v-if="error" class="alert alert-error">
+        <div v-if="error" class="error-message">
           {{ error }}
         </div>
 
         <div>
-          <button type="submit" :disabled="loading" class="btn btn-primary w-full">
+          <button type="submit" :disabled="loading" class="submit-button">
             {{ loading ? 'Signing in...' : 'Sign in' }}
           </button>
         </div>
@@ -127,3 +127,45 @@ const handleSubmit = async () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.login-container {
+  @apply flex min-h-full flex-col justify-center px-6 py-12 lg:px-8;
+}
+
+.login-header-container {
+  @apply sm:mx-auto sm:w-full sm:max-w-sm;
+}
+
+.login-title {
+  @apply mt-10 text-center text-2xl font-bold leading-9 tracking-tight;
+}
+
+.login-form-container {
+  @apply mt-10 sm:mx-auto sm:w-full sm:max-w-sm;
+}
+
+.login-form {
+  @apply space-y-6;
+}
+
+.form-label {
+  @apply block text-sm font-medium leading-6;
+}
+
+.input-container {
+  @apply mt-2;
+}
+
+.form-input {
+  @apply input input-bordered w-full;
+}
+
+.submit-button {
+  @apply btn btn-primary w-full;
+}
+
+.error-message {
+  @apply alert alert-error;
+}
+</style>
