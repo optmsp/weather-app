@@ -137,23 +137,67 @@ src/
 - Node.js 18+
 - npm 8+
 
-### Installation
+### Installation and Setup
 ```sh
 # Install dependencies
 npm install
+```
 
-# Start development server
+### Running the Application
+You'll need to run both the mock API server and the Vue development server:
+
+1. Start the Mock API Server (Terminal 1):
+```sh
+# Start json-server on port 3000
+npm run mock-api
+```
+This starts the mock API server with endpoints for:
+- Authentication (http://localhost:3000/users)
+- Sessions (http://localhost:3000/sessions)
+- Favorites (http://localhost:3000/favorites)
+- History (http://localhost:3000/history)
+
+2. Start the Vue Development Server (Terminal 2):
+```sh
+# Start Vite dev server on port 4000
+npm run dev
+```
+
+The application will be available at http://localhost:4000
+
+### Development Scripts
+```sh
+# Start mock API server (json-server)
+npm run mock-api
+
+# Start Vue development server
 npm run dev
 
-# Run tests
-npm run test
-
-# Build for production
-npm run build
+# Type checking
+npm run type-check
 
 # Lint and fix files
 npm run lint
+
+# Format code with Prettier
+npm run format
+
+# Build for production
+npm run build
 ```
+
+### Testing the Application
+1. Ensure both servers are running (mock-api and dev)
+2. Register a new account using the registration form
+3. Test 2FA setup during first login
+4. Try the weather search functionality
+5. Add locations to favorites
+6. Check the history page for activity tracking
+
+### Common Issues
+- If port 3000 is in use, stop other services using that port before starting mock-api
+- If you see authentication errors, ensure the mock API server is running
+- For weather data issues, check the browser console for API errors
 
 ## Browser Support
 - Chrome (latest)
