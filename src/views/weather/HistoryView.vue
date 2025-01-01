@@ -43,11 +43,10 @@ const allHistory = computed(() => {
           <div class="history-item">
             <div>
               <span
-                class="history-badge"
                 :class="{
-                  'badge-info': entry.type === 'search',
-                  'badge-success': entry.type === 'favorite',
-                  'badge-warning': entry.type === 'login',
+                  'badge badge-info': entry.type === 'search',
+                  'badge badge-success': entry.type === 'favorite',
+                  'badge badge-warning': entry.type === 'login'
                 }"
               >
                 {{ entry.type }}
@@ -81,10 +80,6 @@ const allHistory = computed(() => {
 
 .history-item {
   @apply flex justify-between items-center;
-}
-
-.history-badge {
-  @apply badge;
 }
 
 .history-details {
