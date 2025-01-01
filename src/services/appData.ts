@@ -41,8 +41,8 @@ export async function getFavorites(): Promise<FavoriteLocation[]> {
   try {
     const response = await fetch('/api/favorites', {
       headers: {
-        'Authorization': `Bearer ${auth.token}`
-      }
+        Authorization: `Bearer ${auth.token}`,
+      },
     });
     if (!response.ok) throw new Error('Failed to fetch favorites');
     return await response.json();
@@ -65,15 +65,15 @@ export async function addFavorite(weatherData: WeatherData): Promise<FavoriteLoc
       city: weatherData.location,
       coordinates: {
         lat: weatherData.coordinates.latitude,
-        lon: weatherData.coordinates.longitude
-      }
+        lon: weatherData.coordinates.longitude,
+      },
     };
 
     const response = await fetch('/api/favorites', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${auth.token}`,
+        Authorization: `Bearer ${auth.token}`,
       },
       body: JSON.stringify(favorite),
     });
@@ -97,8 +97,8 @@ export async function removeFavorite(favoriteId: string): Promise<boolean> {
     const response = await fetch(`/api/favorites/${favoriteId}`, {
       method: 'DELETE',
       headers: {
-        'Authorization': `Bearer ${auth.token}`,
-      }
+        Authorization: `Bearer ${auth.token}`,
+      },
     });
 
     if (!response.ok) throw new Error('Failed to remove favorite');
@@ -119,8 +119,8 @@ export async function getHistory(): Promise<HistoryEntry[]> {
   try {
     const response = await fetch('/api/history', {
       headers: {
-        'Authorization': `Bearer ${auth.token}`
-      }
+        Authorization: `Bearer ${auth.token}`,
+      },
     });
     if (!response.ok) throw new Error('Failed to fetch history');
     return await response.json();
@@ -142,7 +142,7 @@ export async function addHistory(entry: Omit<HistoryEntry, 'id'>): Promise<Histo
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${auth.token}`,
+        Authorization: `Bearer ${auth.token}`,
       },
       body: JSON.stringify(entry),
     });

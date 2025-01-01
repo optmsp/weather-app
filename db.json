@@ -51,7 +51,7 @@
   ],
   "favorites": [
     {
-      "id": "a035",
+      "id": "170b",
       "userId": "eca5",
       "city": "Berlin",
       "coordinates": {
@@ -60,12 +60,12 @@
       }
     },
     {
-      "id": "170b",
+      "id": "7724",
       "userId": "eca5",
-      "city": "Berlin",
+      "city": "Paris",
       "coordinates": {
-        "lat": 52.52,
-        "lon": 13.41
+        "lat": 48.85,
+        "lon": 2.35
       }
     }
   ],
@@ -90,6 +90,15 @@
           "lat": 52.52,
           "lon": 13.41
         }
+      }
+    },
+    {
+      "id": "12ea",
+      "type": "search",
+      "userId": "eca5",
+      "timestamp": "2024-01-01T00:00:00Z",
+      "details": {
+        "query": "Paris"
       }
     }
   ]
