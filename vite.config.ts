@@ -27,10 +27,10 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
     },
-    hmr: {
-      // clientPort: 443
-      clientPort: 5173,
-    },
+    // hmr: {
+    //   // clientPort: 443,
+    //   clientPort: 5173,
+    // },
   },
   optimizeDeps: {
     esbuildOptions: {
