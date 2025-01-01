@@ -1,4 +1,4 @@
-import type { Ref } from 'vue'
+// Weather service types and implementation
 import { useGeolocation } from '@vueuse/core'
 
 interface WeatherResponse {

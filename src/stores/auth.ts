@@ -6,7 +6,7 @@
 import { defineStore } from 'pinia'
 import { AuthService } from '../services/auth'
 import { TwoFactorAuthService } from '../services/2fa'
-import type { AuthState, LoginCredentials, RegisterData, User, UserProfile } from '../types/user'
+import type { AuthState, LoginCredentials, RegisterData, UserProfile } from '../types/user'
 
 /**
  * Pinia store for managing authentication state and operations.

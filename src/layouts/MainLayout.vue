@@ -9,7 +9,7 @@ const isLoggedIn = computed(() => {
   console.log('Auth state:', authStore.isAuthenticated)
   return authStore.isAuthenticated
 })
-const currentUser = computed(() => authStore.currentUser)
+// User profile data is managed by the auth store
 
 const handleLogout = () => {
   console.log('Logging out user')
