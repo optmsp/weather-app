@@ -10,15 +10,20 @@ interface WeatherResponse {
   }
 }
 
-interface GeocodingResponse {
-  results?: Array<{
-    name: string
-    latitude: number
-    longitude: number
-    country: string
-    admin1?: string
-  }>
+interface GeocodingSuggestion {
+  name: string
+  latitude: number
+  longitude: number
+  country: string
+  admin1?: string
 }
+
+interface GeocodingResponse {
+  results?: Array<GeocodingSuggestion>
+  generationtime_ms?: number
+}
+
+export type { GeocodingSuggestion }
 
 export interface WeatherData {
   temperature: number
@@ -108,6 +113,30 @@ export class WeatherService {
     } catch (error) {
       console.error('Error searching location:', error)
       return null
+    }
+  }
+
+  /**
+   * Searches for locations matching the given query, returning multiple suggestions.
+   * @param query - The location name to search for
+   * @param count - Maximum number of suggestions to return (default: 5)
+   * @returns Promise resolving to an array of location suggestions
+   */
+  static async searchLocations(query: string, count: number = 5): Promise<GeocodingSuggestion[]> {
+    try {
+      if (!query.trim()) return []
+
+      const response = await fetch(
+        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query.trim())}&count=${count}&language=en&format=json`,
+      )
+
+      if (!response.ok) throw new Error('Location search failed')
+
+      const data: GeocodingResponse = await response.json()
+      return data.results || []
+    } catch (error) {
+      console.error('Error searching locations:', error)
+      return []
     }
   }
 
