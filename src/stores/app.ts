@@ -6,82 +6,81 @@
 import { defineStore } from 'pinia';
 import { WeatherService, type WeatherData } from '../services/weather';
 import { ref } from 'vue';
-
-/**
- * Interface representing the app store state.
- */
-interface AppState {
-  currentWeather: WeatherData | null;
-  favorites: WeatherData[];
-  searchHistory: Array<{
-    query: string;
-    timestamp: string;
-  }>;
-  favoriteHistory: Array<{
-    action: 'add' | 'remove';
-    location: string;
-    timestamp: string;
-  }>;
-  error: string | null;
-  loading: boolean;
-}
-
-const STORAGE_KEY = 'app-store'
-
-const loadStateFromStorage = (): Partial<AppState> => {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      const data = JSON.parse(stored);
-      return {
-        favorites: data.favorites || [],
-        searchHistory: data.searchHistory || [],
-        favoriteHistory: data.favoriteHistory || [],
-      };
-    }
-  } catch (error) {
-    console.error('Failed to load state from localStorage:', error);
-  }
-  return {}
-}
+import {
+  getFavorites,
+  addFavorite as addFavoriteToApi,
+  removeFavorite as removeFavoriteFromApi,
+  getHistory,
+  addHistory as addHistoryToApi,
+} from '../services/appData';
 
 export const useAppStore = defineStore('app', () => {
-  type FavoriteHistoryEntry = {
-    action: 'add' | 'remove';
-    location: string;
-    timestamp: string;
-  };
-
   type SearchHistoryEntry = {
     query: string;
     timestamp: string;
   };
-  const stored = loadStateFromStorage();
-
   const currentWeather = ref<WeatherData | null>(null);
-  const favorites = ref<WeatherData[]>(stored.favorites || []);
-  const searchHistory = ref<SearchHistoryEntry[]>(stored.searchHistory || []);
-  const favoriteHistory = ref<FavoriteHistoryEntry[]>(stored.favoriteHistory || []);
+  const favorites = ref<WeatherData[]>([]);
+  const searchHistory = ref<SearchHistoryEntry[]>([]);
+  const favoriteHistory = ref<
+    Array<{ action: 'add' | 'remove'; location: string; timestamp: string }>
+  >([]);
   const error = ref<string | null>(null);
   const loading = ref(false);
 
-  const saveToStorage = () => {
-    try {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({
-          favorites: favorites.value,
-          searchHistory: searchHistory.value,
-          favoriteHistory: favoriteHistory.value,
+  // Load initial data from backend
+  const loadFavorites = async (skipRefresh: boolean = false) => {
+    const data = await getFavorites();
+    favorites.value = data.map((favorite) => ({
+      id: favorite.id,
+      temperature: 0,
+      humidity: 0,
+      windSpeed: 0,
+      description: '',
+      location: favorite.city,
+      coordinates: {
+        latitude: favorite.coordinates.lat,
+        longitude: favorite.coordinates.lon,
+      },
+    }));
+
+    // Refresh weather data for all favorites unless explicitly skipped
+    if (!skipRefresh) {
+      const updatedFavorites = await Promise.all(
+        favorites.value.map(async (favorite) => {
+          const weather = await WeatherService.searchLocation(favorite.location);
+          return weather || favorite;
         }),
       );
-    } catch (error) {
-      console.error('Failed to save state to localStorage:', error);
+      favorites.value = updatedFavorites.filter(
+        (weather): weather is WeatherData => weather !== null,
+      );
     }
   };
 
+  const loadHistory = async () => {
+    const data = await getHistory();
+
+    // Load search history
+    searchHistory.value = data
+      .filter((entry) => entry.type === 'search')
+      .map((entry) => ({
+        query: entry.details.query || '',
+        timestamp: entry.timestamp,
+      }));
+
+    // Load favorite history
+    favoriteHistory.value = data
+      .filter((entry) => entry.type === 'favorite')
+      .map((entry) => ({
+        action: entry.details.action as 'add' | 'remove',
+        location: entry.details.location || '',
+        timestamp: entry.timestamp,
+      }));
+  };
+
   const isFavorite = (location: string) =>
-    favorites.value.some((fav: WeatherData) => fav.location === location)
+    favorites.value.some((fav: WeatherData) => fav.location === location);
 
   /** Store actions for weather operations */
   /**
@@ -99,14 +98,27 @@ export const useAppStore = defineStore('app', () => {
 
       if (weather) {
         currentWeather.value = weather;
-        searchHistory.value.unshift({
-          query,
+        await addHistoryToApi({
+          type: 'search',
+          userId: '', // Will be set by API service
           timestamp: new Date().toISOString(),
+          details: {
+            query,
+            success: true,
+          },
         });
-        // Save to localStorage after updating search history
-        saveToStorage();
+        await loadHistory();
       } else {
         error.value = 'Location not found';
+        await addHistoryToApi({
+          type: 'search',
+          userId: '', // Will be set by API service
+          timestamp: new Date().toISOString(),
+          details: {
+            query,
+            success: false,
+          },
+        });
       }
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to search location';
@@ -144,29 +156,50 @@ export const useAppStore = defineStore('app', () => {
    * Records the action in favorite history.
    * @param {WeatherData} weather - Weather data for the location to toggle
    */
-  const toggleFavorite = (weather: WeatherData) => {
+  const toggleFavorite = async (weather: WeatherData) => {
     const index = favorites.value.findIndex(
       (fav: WeatherData) => fav.location === weather.location,
     );
 
     if (index === -1) {
-      favorites.value.push(weather);
-      favoriteHistory.value.unshift({
-        action: 'add',
-        location: weather.location,
-        timestamp: new Date().toISOString(),
-      });
-    } else {
-      favorites.value.splice(index, 1);
-      favoriteHistory.value.unshift({
-        action: 'remove',
-        location: weather.location,
-        timestamp: new Date().toISOString(),
-      });
-    }
+      const added = await addFavoriteToApi(weather);
+      if (added) {
+        // Update favorites array directly instead of reloading
+        favorites.value = [
+          ...favorites.value,
+          {
+            ...weather,
+            id: added.id,
+          },
+        ];
 
-    // Save to localStorage
-    saveToStorage();
+        await addHistoryToApi({
+          type: 'favorite',
+          userId: '', // Will be set by API service
+          timestamp: new Date().toISOString(),
+          details: {
+            action: 'add',
+            location: weather.location,
+          },
+        });
+      }
+    } else {
+      const removed = await removeFavoriteFromApi(favorites.value[index].id || '');
+      if (removed) {
+        // Update favorites array directly instead of reloading
+        favorites.value = favorites.value.filter((_, i) => i !== index);
+
+        await addHistoryToApi({
+          type: 'favorite',
+          userId: '', // Will be set by API service
+          timestamp: new Date().toISOString(),
+          details: {
+            action: 'remove',
+            location: weather.location,
+          },
+        });
+      }
+    }
   };
 
   /**
@@ -175,9 +208,18 @@ export const useAppStore = defineStore('app', () => {
    * @returns {Promise<void>}
    */
   const refreshFavorites = async () => {
+    // Load favorites with skipRefresh=true to avoid recursive refresh
+    await loadFavorites(true);
     const updatedFavorites = await Promise.all(
       favorites.value.map(async (favorite: WeatherData) => {
         const weather = await WeatherService.searchLocation(favorite.location);
+        if (weather) {
+          // Don't re-add to API, just update the weather data
+          return {
+            ...weather,
+            id: favorite.id, // Preserve the existing favorite ID
+          };
+        }
         return weather || favorite;
       }),
     );
@@ -185,7 +227,6 @@ export const useAppStore = defineStore('app', () => {
     favorites.value = updatedFavorites.filter(
       (weather: WeatherData | null): weather is WeatherData => weather !== null,
     );
-    saveToStorage();
   };
 
   return {
@@ -200,5 +241,7 @@ export const useAppStore = defineStore('app', () => {
     getCurrentLocationWeather,
     toggleFavorite,
     refreshFavorites,
+    loadFavorites,
+    loadHistory,
   };
 });
