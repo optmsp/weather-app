@@ -51,22 +51,31 @@
   ],
   "favorites": [
     {
-      "id": "9bdc",
-      "userId": "1023",
-      "city": "Baton Rouge, Louisiana, United States",
+      "userId": "test-user",
+      "city": "London",
       "coordinates": {
-        "lat": 30.44332,
-        "lon": -91.18747
-      }
+        "lat": 51.5074,
+        "lon": -0.1278
+      },
+      "id": 1
     },
     {
-      "id": "f4cb",
-      "userId": "1023",
-      "city": "Seattle, Washington, United States",
+      "userId": "test-user",
+      "city": "Tokyo",
       "coordinates": {
-        "lat": 47.60621,
-        "lon": -122.33207
-      }
+        "lat": 35.6762,
+        "lon": 139.6503
+      },
+      "id": 2
+    },
+    {
+      "userId": "test-user",
+      "city": "New York",
+      "coordinates": {
+        "lat": 40.7128,
+        "lon": -74.006
+      },
+      "id": 3
     }
   ],
   "history": [
