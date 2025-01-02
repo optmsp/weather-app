@@ -164,8 +164,15 @@ export const useAppStore = defineStore('app', () => {
     if (index === -1) {
       const added = await addFavoriteToApi(weather);
       if (added) {
-        // Load favorites and refresh weather data
-        await loadFavorites(false);
+        // Update favorites array directly instead of reloading
+        favorites.value = [
+          ...favorites.value,
+          {
+            ...weather,
+            id: added.id,
+          },
+        ];
+
         await addHistoryToApi({
           type: 'favorite',
           userId: '', // Will be set by API service
@@ -179,8 +186,9 @@ export const useAppStore = defineStore('app', () => {
     } else {
       const removed = await removeFavoriteFromApi(favorites.value[index].id || '');
       if (removed) {
-        // Load favorites and refresh weather data
-        await loadFavorites(false);
+        // Update favorites array directly instead of reloading
+        favorites.value = favorites.value.filter((_, i) => i !== index);
+
         await addHistoryToApi({
           type: 'favorite',
           userId: '', // Will be set by API service
@@ -206,10 +214,11 @@ export const useAppStore = defineStore('app', () => {
       favorites.value.map(async (favorite: WeatherData) => {
         const weather = await WeatherService.searchLocation(favorite.location);
         if (weather) {
-          await addFavoriteToApi({
+          // Don't re-add to API, just update the weather data
+          return {
             ...weather,
-            id: favorite.id,
-          });
+            id: favorite.id, // Preserve the existing favorite ID
+          };
         }
         return weather || favorite;
       }),

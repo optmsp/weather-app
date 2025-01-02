@@ -47,6 +47,16 @@
       "id": "0c47",
       "email": "test@example.com",
       "password": "Test123abc"
+    },
+    {
+      "id": "ca44",
+      "email": "test@example.com",
+      "password": "Test123abc"
+    },
+    {
+      "id": "6625",
+      "email": "test@example.com",
+      "password": "Test123abc"
     }
   ],
   "favorites": [
@@ -70,6 +80,7 @@
     },
     {
       "id": "2b49",
+      "userId": "eca5",
       "city": "London",
       "coordinates": {
         "lat": 51.5074,
@@ -78,6 +89,7 @@
     },
     {
       "id": "1b4a",
+      "userId": "eca5",
       "city": "Tokyo",
       "coordinates": {
         "lat": 35.6762,

@@ -59,9 +59,25 @@ export async function getFavorites(): Promise<FavoriteLocation[]> {
  */
 export async function addFavorite(weatherData: WeatherData): Promise<FavoriteLocation | null> {
   const auth = useAuthStore();
-  if (!auth.token || !auth.user?.id) return null;
+  if (!auth.token || !auth.user?.id) {
+    console.error('Error adding favorite: User not authenticated or missing ID');
+    return null;
+  }
 
   try {
+    // Check if favorite already exists for this user and city
+    const existingFavorites = await getFavorites();
+    const existingFavorite = existingFavorites.find(
+      (fav) =>
+        fav.userId === auth.user?.id &&
+        fav.city.toLowerCase() === weatherData.location.toLowerCase(),
+    );
+
+    if (existingFavorite) {
+      console.log('Favorite already exists:', existingFavorite);
+      return existingFavorite;
+    }
+
     const favorite: Omit<FavoriteLocation, 'id'> = {
       userId: auth.user.id,
       city: weatherData.location,
@@ -70,6 +86,11 @@ export async function addFavorite(weatherData: WeatherData): Promise<FavoriteLoc
         lon: weatherData.coordinates.longitude,
       },
     };
+
+    // Validate required fields
+    if (!favorite.userId || !favorite.city || !favorite.coordinates) {
+      throw new Error('Missing required fields for favorite');
+    }
 
     const response = await fetch('/api/favorites', {
       method: 'POST',
@@ -80,7 +101,10 @@ export async function addFavorite(weatherData: WeatherData): Promise<FavoriteLoc
       body: JSON.stringify(favorite),
     });
 
-    if (!response.ok) throw new Error('Failed to add favorite');
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`Failed to add favorite: ${error}`);
+    }
     return await response.json();
   } catch (error) {
     console.error('Error adding favorite:', error);
