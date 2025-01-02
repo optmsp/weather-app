@@ -67,6 +67,22 @@
         "lat": 48.85,
         "lon": 2.35
       }
+    },
+    {
+      "id": "2b49",
+      "city": "London",
+      "coordinates": {
+        "lat": 51.5074,
+        "lon": -0.1278
+      }
+    },
+    {
+      "id": "1b4a",
+      "city": "Tokyo",
+      "coordinates": {
+        "lat": 35.6762,
+        "lon": 139.6503
+      }
     }
   ],
   "history": [
@@ -99,6 +115,26 @@
       "timestamp": "2024-01-01T00:00:00Z",
       "details": {
         "query": "Paris"
+      }
+    },
+    {
+      "id": "37a8",
+      "type": "search",
+      "userId": "test",
+      "timestamp": "2024-02-01T12:00:00Z",
+      "details": {
+        "query": "London",
+        "success": true
+      }
+    },
+    {
+      "id": "f26f",
+      "type": "favorite",
+      "userId": "test",
+      "timestamp": "2024-02-01T13:00:00Z",
+      "details": {
+        "action": "add",
+        "location": "Tokyo"
       }
     }
   ]

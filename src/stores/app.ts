@@ -29,11 +29,11 @@ export const useAppStore = defineStore('app', () => {
   const loading = ref(false);
 
   // Load initial data from backend
-  const loadFavorites = async () => {
+  const loadFavorites = async (skipRefresh: boolean = false) => {
     const data = await getFavorites();
     favorites.value = data.map((favorite) => ({
       id: favorite.id,
-      temperature: 0, // Will be updated by refreshFavorites
+      temperature: 0,
       humidity: 0,
       windSpeed: 0,
       description: '',
@@ -43,6 +43,19 @@ export const useAppStore = defineStore('app', () => {
         longitude: favorite.coordinates.lon,
       },
     }));
+
+    // Refresh weather data for all favorites unless explicitly skipped
+    if (!skipRefresh) {
+      const updatedFavorites = await Promise.all(
+        favorites.value.map(async (favorite) => {
+          const weather = await WeatherService.searchLocation(favorite.location);
+          return weather || favorite;
+        }),
+      );
+      favorites.value = updatedFavorites.filter(
+        (weather): weather is WeatherData => weather !== null,
+      );
+    }
   };
 
   const loadHistory = async () => {
@@ -151,7 +164,8 @@ export const useAppStore = defineStore('app', () => {
     if (index === -1) {
       const added = await addFavoriteToApi(weather);
       if (added) {
-        await loadFavorites();
+        // Load favorites and refresh weather data
+        await loadFavorites(false);
         await addHistoryToApi({
           type: 'favorite',
           userId: '', // Will be set by API service
@@ -165,7 +179,8 @@ export const useAppStore = defineStore('app', () => {
     } else {
       const removed = await removeFavoriteFromApi(favorites.value[index].id || '');
       if (removed) {
-        await loadFavorites();
+        // Load favorites and refresh weather data
+        await loadFavorites(false);
         await addHistoryToApi({
           type: 'favorite',
           userId: '', // Will be set by API service
@@ -185,7 +200,8 @@ export const useAppStore = defineStore('app', () => {
    * @returns {Promise<void>}
    */
   const refreshFavorites = async () => {
-    await loadFavorites(); // Reload favorites from backend
+    // Load favorites with skipRefresh=true to avoid recursive refresh
+    await loadFavorites(true);
     const updatedFavorites = await Promise.all(
       favorites.value.map(async (favorite: WeatherData) => {
         const weather = await WeatherService.searchLocation(favorite.location);
@@ -202,7 +218,6 @@ export const useAppStore = defineStore('app', () => {
     favorites.value = updatedFavorites.filter(
       (weather: WeatherData | null): weather is WeatherData => weather !== null,
     );
-    await loadFavorites(); // Reload to get updated data
   };
 
   return {
