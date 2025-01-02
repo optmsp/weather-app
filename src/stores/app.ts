@@ -50,7 +50,7 @@ export const useAppStore = defineStore('app', () => {
         favorites.value.map(async (favorite) => {
           const weatherResults = await WeatherService.searchLocation(favorite.location);
           // Use first exact match or keep existing favorite
-          return (weatherResults && weatherResults.length > 0) ? weatherResults[0] : favorite;
+          return weatherResults && weatherResults.length > 0 ? weatherResults[0] : favorite;
         }),
       );
       favorites.value = updatedFavorites.filter(
@@ -107,7 +107,7 @@ export const useAppStore = defineStore('app', () => {
           details: {
             query,
             success: true,
-            resultCount: weatherResults.length
+            resultCount: weatherResults.length,
           },
         });
         await loadHistory();
@@ -120,7 +120,7 @@ export const useAppStore = defineStore('app', () => {
           details: {
             query,
             success: false,
-            resultCount: 0
+            resultCount: 0,
           },
         });
       }

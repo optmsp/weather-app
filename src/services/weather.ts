@@ -98,14 +98,14 @@ export class WeatherService {
       const data: GeocodingResponse = await response.json();
       const allLocations = data.results ?? [];
       const prefix = query.toLowerCase();
-      
+
       // Filter locations that start with the search query
-      const matchingLocations = allLocations.filter(loc => 
-        loc.name.toLowerCase().startsWith(prefix)
+      const matchingLocations = allLocations.filter((loc) =>
+        loc.name.toLowerCase().startsWith(prefix),
       );
 
       // Fetch weather data for all matching locations
-      const weatherPromises = matchingLocations.map(async location => {
+      const weatherPromises = matchingLocations.map(async (location) => {
         const weatherData = await this.fetchWeatherData(location.latitude, location.longitude);
         if (!weatherData) return null;
         weatherData.location = `${location.name}${location.admin1 ? `, ${location.admin1}` : ''}, ${location.country}`;
