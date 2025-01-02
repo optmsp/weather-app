@@ -47,53 +47,25 @@
       "id": "0c47",
       "email": "test@example.com",
       "password": "Test123abc"
-    },
-    {
-      "id": "ca44",
-      "email": "test@example.com",
-      "password": "Test123abc"
-    },
-    {
-      "id": "6625",
-      "email": "test@example.com",
-      "password": "Test123abc"
     }
   ],
   "favorites": [
     {
-      "id": "170b",
-      "userId": "eca5",
-      "city": "Berlin",
+      "id": "9bdc",
+      "userId": "1023",
+      "city": "Baton Rouge, Louisiana, United States",
       "coordinates": {
-        "lat": 52.52,
-        "lon": 13.41
+        "lat": 30.44332,
+        "lon": -91.18747
       }
     },
     {
-      "id": "7724",
-      "userId": "eca5",
-      "city": "Paris",
+      "id": "f4cb",
+      "userId": "1023",
+      "city": "Seattle, Washington, United States",
       "coordinates": {
-        "lat": 48.85,
-        "lon": 2.35
-      }
-    },
-    {
-      "id": "2b49",
-      "userId": "eca5",
-      "city": "London",
-      "coordinates": {
-        "lat": 51.5074,
-        "lon": -0.1278
-      }
-    },
-    {
-      "id": "1b4a",
-      "userId": "eca5",
-      "city": "Tokyo",
-      "coordinates": {
-        "lat": 35.6762,
-        "lon": 139.6503
+        "lat": 47.60621,
+        "lon": -122.33207
       }
     }
   ],
@@ -121,32 +93,83 @@
       }
     },
     {
-      "id": "12ea",
-      "type": "search",
-      "userId": "eca5",
-      "timestamp": "2024-01-01T00:00:00Z",
+      "id": "6d94",
+      "type": "favorite",
+      "userId": "",
+      "timestamp": "2025-01-02T15:54:44.559Z",
       "details": {
-        "query": "Paris"
+        "action": "remove",
+        "location": "Berlin, Land Berlin, Germany"
       }
     },
     {
-      "id": "37a8",
-      "type": "search",
-      "userId": "test",
-      "timestamp": "2024-02-01T12:00:00Z",
+      "id": "3235",
+      "type": "favorite",
+      "userId": "",
+      "timestamp": "2025-01-02T15:54:45.335Z",
       "details": {
-        "query": "London",
+        "action": "remove",
+        "location": "Berlin, Land Berlin, Germany"
+      }
+    },
+    {
+      "id": "5d5b",
+      "type": "search",
+      "userId": "",
+      "timestamp": "2025-01-02T15:54:52.854Z",
+      "details": {
+        "query": "baton rouge",
         "success": true
       }
     },
     {
-      "id": "f26f",
+      "id": "35df",
       "type": "favorite",
-      "userId": "test",
-      "timestamp": "2024-02-01T13:00:00Z",
+      "userId": "",
+      "timestamp": "2025-01-02T15:54:55.308Z",
       "details": {
         "action": "add",
-        "location": "Tokyo"
+        "location": "Baton Rouge, Louisiana, United States"
+      }
+    },
+    {
+      "id": "e917",
+      "type": "favorite",
+      "userId": "",
+      "timestamp": "2025-01-02T15:55:02.154Z",
+      "details": {
+        "action": "remove",
+        "location": "Baton Rouge, Louisiana, United States"
+      }
+    },
+    {
+      "id": "1daf",
+      "type": "favorite",
+      "userId": "",
+      "timestamp": "2025-01-02T15:55:03.434Z",
+      "details": {
+        "action": "add",
+        "location": "Baton Rouge, Louisiana, United States"
+      }
+    },
+    {
+      "id": "ea2c",
+      "type": "search",
+      "userId": "",
+      "timestamp": "2025-01-02T15:55:11.122Z",
+      "details": {
+        "query": "seattle",
+        "success": true
+      }
+    },
+    {
+      "id": "fd8b",
+      "type": "favorite",
+      "userId": "",
+      "timestamp": "2025-01-02T15:55:12.708Z",
+      "details": {
+        "action": "add",
+        "location": "Seattle, Washington, United States"
       }
     }
   ]
