@@ -48,8 +48,9 @@ export const useAppStore = defineStore('app', () => {
     if (!skipRefresh) {
       const updatedFavorites = await Promise.all(
         favorites.value.map(async (favorite) => {
-          const weather = await WeatherService.searchLocation(favorite.location);
-          return weather || favorite;
+          const weatherResults = await WeatherService.searchLocation(favorite.location);
+          // Use first exact match or keep existing favorite
+          return (weatherResults && weatherResults.length > 0) ? weatherResults[0] : favorite;
         }),
       );
       favorites.value = updatedFavorites.filter(
@@ -94,10 +95,11 @@ export const useAppStore = defineStore('app', () => {
     error.value = null;
 
     try {
-      const weather = await WeatherService.searchLocation(query);
+      const weatherResults = await WeatherService.searchLocation(query);
 
-      if (weather) {
-        currentWeather.value = weather;
+      if (weatherResults && weatherResults.length > 0) {
+        // For now, use the first result until UI is updated to handle multiple results
+        currentWeather.value = weatherResults[0];
         await addHistoryToApi({
           type: 'search',
           userId: '', // Will be set by API service
@@ -105,6 +107,7 @@ export const useAppStore = defineStore('app', () => {
           details: {
             query,
             success: true,
+            resultCount: weatherResults.length
           },
         });
         await loadHistory();
@@ -117,6 +120,7 @@ export const useAppStore = defineStore('app', () => {
           details: {
             query,
             success: false,
+            resultCount: 0
           },
         });
       }
@@ -212,15 +216,15 @@ export const useAppStore = defineStore('app', () => {
     await loadFavorites(true);
     const updatedFavorites = await Promise.all(
       favorites.value.map(async (favorite: WeatherData) => {
-        const weather = await WeatherService.searchLocation(favorite.location);
-        if (weather) {
-          // Don't re-add to API, just update the weather data
+        const weatherResults = await WeatherService.searchLocation(favorite.location);
+        if (weatherResults && weatherResults.length > 0) {
+          // Don't re-add to API, just update the weather data with first match
           return {
-            ...weather,
+            ...weatherResults[0],
             id: favorite.id, // Preserve the existing favorite ID
           };
         }
-        return weather || favorite;
+        return weatherResults?.[0] || favorite;
       }),
     );
 

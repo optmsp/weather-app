@@ -87,25 +87,34 @@ export class WeatherService {
     }
   }
 
-  static async searchLocation(query: string): Promise<WeatherData | null> {
+  static async searchLocation(query: string): Promise<WeatherData[]> {
     try {
       const response = await fetch(
-        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=en&format=json`,
+        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5&language=en&format=json`,
       );
 
       if (!response.ok) throw new Error('Location search failed');
 
       const data: GeocodingResponse = await response.json();
+      const allLocations = data.results ?? [];
+      const prefix = query.toLowerCase();
+      
+      // Filter locations that start with the search query
+      const matchingLocations = allLocations.filter(loc => 
+        loc.name.toLowerCase().startsWith(prefix)
+      );
 
-      if (!data.results?.[0]) return null;
+      // Fetch weather data for all matching locations
+      const weatherPromises = matchingLocations.map(async location => {
+        const weatherData = await this.fetchWeatherData(location.latitude, location.longitude);
+        if (!weatherData) return null;
+        weatherData.location = `${location.name}${location.admin1 ? `, ${location.admin1}` : ''}, ${location.country}`;
+        return weatherData;
+      });
 
-      const location = data.results[0];
-      const weatherData = await this.fetchWeatherData(location.latitude, location.longitude);
-
-      if (!weatherData) return null;
-
-      weatherData.location = `${location.name}${location.admin1 ? `, ${location.admin1}` : ''}, ${location.country}`;
-      return weatherData;
+      // Wait for all weather data to be fetched and filter out any failed requests
+      const weatherResults = await Promise.all(weatherPromises);
+      return weatherResults.filter((result): result is WeatherData => result !== null);
     } catch (error) {
       console.error('Error searching location:', error);
       return null;
