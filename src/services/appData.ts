@@ -105,7 +105,7 @@ export async function addFavorite(weatherData: WeatherData): Promise<FavoriteLoc
       console.log('Favorite already exists');
       return null;
     }
-    
+
     if (!response.ok) {
       const error = await response.text();
       throw new Error(`Failed to add favorite: ${error}`);
