@@ -82,3 +82,40 @@
 2. Use `@apply` for composing Tailwind utilities
 3. Keep class names semantic and component-specific
 4. Maintain responsive classes within style definitions
+
+## Vue Component Organization
+
+### Standard Component Structure
+When creating or modifying Vue components, follow this organization:
+
+1. Script Section (Top)
+   - Place `<script setup>` at the top
+   - Include imports and component logic
+   - Use TypeScript (`lang="ts"`)
+
+2. Template Section (Middle)
+   - Place `<template>` after script
+   - Contains component markup and layout
+   - Keep template logic minimal
+
+3. Style Section (Bottom)
+   - Place `<style scoped>` at the bottom
+   - Contains component-specific styles
+   - Use Tailwind's @apply for utility composition
+
+### Example
+```vue
+<script setup lang="ts">
+// Imports and logic
+</script>
+
+<template>
+<!-- Markup and layout -->
+</template>
+
+<style scoped>
+/* Component styles */
+</style>
+```
+
+For more details on component organization, refer to the [Vue 3 Style Guide](https://vuejs.org/style-guide/).
