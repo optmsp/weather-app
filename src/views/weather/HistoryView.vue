@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/stores/app';
 import { useAuthStore } from '@/stores/auth';
@@ -9,6 +9,10 @@ const authStore = useAuthStore();
 
 const { searchHistory, favoriteHistory } = storeToRefs(appStore);
 const { loginHistory } = storeToRefs(authStore);
+
+onMounted(async () => {
+  await appStore.loadHistory();
+});
 
 const allHistory = computed(() => {
   const combined = [

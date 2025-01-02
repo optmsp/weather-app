@@ -8,7 +8,7 @@ import { useAuthStore } from '../stores/auth';
 
 export interface HistoryEntry {
   id?: string;
-  type: 'search' | 'login';
+  type: 'search' | 'login' | 'favorite';
   userId: string;
   timestamp: string;
   details: {
@@ -18,6 +18,8 @@ export interface HistoryEntry {
       lon: number;
     };
     success?: boolean;
+    action?: 'add' | 'remove';
+    location?: string;
   };
 }
 

@@ -22,6 +22,9 @@ export const useAppStore = defineStore('app', () => {
   const currentWeather = ref<WeatherData | null>(null);
   const favorites = ref<WeatherData[]>([]);
   const searchHistory = ref<SearchHistoryEntry[]>([]);
+  const favoriteHistory = ref<
+    Array<{ action: 'add' | 'remove'; location: string; timestamp: string }>
+  >([]);
   const error = ref<string | null>(null);
   const loading = ref(false);
 
@@ -44,10 +47,21 @@ export const useAppStore = defineStore('app', () => {
 
   const loadHistory = async () => {
     const data = await getHistory();
+
+    // Load search history
     searchHistory.value = data
       .filter((entry) => entry.type === 'search')
       .map((entry) => ({
         query: entry.details.query || '',
+        timestamp: entry.timestamp,
+      }));
+
+    // Load favorite history
+    favoriteHistory.value = data
+      .filter((entry) => entry.type === 'favorite')
+      .map((entry) => ({
+        action: entry.details.action as 'add' | 'remove',
+        location: entry.details.location || '',
         timestamp: entry.timestamp,
       }));
   };
@@ -139,12 +153,12 @@ export const useAppStore = defineStore('app', () => {
       if (added) {
         await loadFavorites();
         await addHistoryToApi({
-          type: 'search',
+          type: 'favorite',
           userId: '', // Will be set by API service
           timestamp: new Date().toISOString(),
           details: {
-            query: weather.location,
-            success: true,
+            action: 'add',
+            location: weather.location,
           },
         });
       }
@@ -153,12 +167,12 @@ export const useAppStore = defineStore('app', () => {
       if (removed) {
         await loadFavorites();
         await addHistoryToApi({
-          type: 'search',
+          type: 'favorite',
           userId: '', // Will be set by API service
           timestamp: new Date().toISOString(),
           details: {
-            query: weather.location,
-            success: true,
+            action: 'remove',
+            location: weather.location,
           },
         });
       }
@@ -195,6 +209,7 @@ export const useAppStore = defineStore('app', () => {
     currentWeather,
     favorites,
     searchHistory,
+    favoriteHistory,
     error,
     loading,
     isFavorite,
