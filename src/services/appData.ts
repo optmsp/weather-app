@@ -101,6 +101,11 @@ export async function addFavorite(weatherData: WeatherData): Promise<FavoriteLoc
       body: JSON.stringify(favorite),
     });
 
+    if (response.status === 409) {
+      console.log('Favorite already exists');
+      return null;
+    }
+    
     if (!response.ok) {
       const error = await response.text();
       throw new Error(`Failed to add favorite: ${error}`);
